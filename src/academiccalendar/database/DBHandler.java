@@ -95,6 +95,18 @@ public class DBHandler {
             // the following lines are just here to test the correct functionality of the getTermColor method
             String colorAux = this.getTermColor(2);
             
+            // the following lines are just here to test the correct functionality of the getListOfTermIDs method
+            ArrayList<String> auxList = new ArrayList();
+            auxList.add("SEM");
+            auxList.add("MBA");
+            ArrayList<String> auxListOfTermIDs= this.getListOfTermIDs(auxList);
+            
+            // the following lines are just here to test the correct functionality of the getFilteredEvents method
+            ArrayList<String> auxList2 = new ArrayList();
+            auxList2.add("SEM");
+            auxList2.add("MBA");
+            ArrayList<String> auxListOfFilteredEvents= this.getFilteredEvents(auxList2, "Test Name");
+            
         }
         
         
@@ -672,6 +684,119 @@ public class DBHandler {
         
         executeAction(setTermColorAction);
     
+    }
+    
+    
+    public ArrayList<String> getListOfTermIDs(ArrayList<String> auxTermIdentifiersList) {
+        
+        //Object that will hold all the list of Term IDs to be returned
+        ArrayList<String> listOfTermIDs = new ArrayList<>();
+        
+        //Loop that will add to the ArrayList listOfTermIDs all the term IDs needed for filtering events
+        for (int i=0; i < auxTermIdentifiersList.size(); i++)
+        {
+            //Query that will select the term IDs that end with the each term identifier
+            // in the ArrayList auxTermIdentifiersList
+            String TermIDsQuery = "SELECT TermID FROM TERMS "
+                                + "WHERE TermName LIKE '%" + auxTermIdentifiersList.get(i) + "%'";
+        
+            System.out.println("Term IDs list query is: " + TermIDsQuery);
+        
+            //Variable that will hold the result of executing the previous query
+            ResultSet rs = executeQuery(TermIDsQuery);
+        
+        
+            try
+            {
+                //While there are Term IDs in the ResultSet variable, add each one of them to the ArrayList of Strings
+                while(rs.next()) 
+                {
+                    //get the Term ID and store it in a String variable
+                    String auxTermID = rs.getString("TermID");
+                    //add term ID to list of term IDs
+                    listOfTermIDs.add(auxTermID);
+                } 
+            }
+            catch (SQLException e) 
+            {
+                System.err.println(e.getMessage() + "--- error at getListOfTermIDs method in DBHandler class");
+            }
+        
+            //********************************************************************************************************
+            //*******  These lines of code are to Test we get all rules correctly from databse table TERMS  **********
+        
+            //Print full array with all Term Names for testing that we get the list we need
+            System.out.println("Array list of rules is the following:  ");//+ listOfRules);
+            System.out.println("-----------------------------------------------------");
+            System.out.println("-----------------------------------------------------");
+            int arrayListSize = listOfTermIDs.size();
+        
+            for (int j=0; j < arrayListSize; j++)
+            {
+                System.out.println("Term ID: " + listOfTermIDs.get(j));
+            }
+            //*******************************************************************************************************
+            //*******************************************************************************************************
+            
+        }
+        
+        return listOfTermIDs;
+    }
+    
+    public ArrayList<String> getFilteredEvents(ArrayList<String> auxTermIdentifiersList, String calName){
+        
+        
+        //Declare and instantiate ArrayList object that will hold all events for the requested term(s)
+        ArrayList<String> filteredEventsList = new ArrayList();
+        
+        //has to call getListOfTermIDs first to know which events to get from EVENTS table
+        ArrayList<String> listOfTermIDs = this.getListOfTermIDs(auxTermIdentifiersList);
+        
+        if (!listOfTermIDs.isEmpty())
+        {
+            for(int i=0; i < listOfTermIDs.size(); i++)
+            {
+                String getEventsQuery = "SELECT * FROM EVENTS "
+                                        + "WHERE EVENTS.TermID=" + listOfTermIDs.get(i)
+                                        + " AND EVENTS.CalendarName='" + calName + "'";
+                
+                System.out.println("query to get filtered events is: " + getEventsQuery);
+                
+                //Variable that will hold the result of executing the previous query
+                ResultSet rs = executeQuery(getEventsQuery);
+        
+        
+                try
+                {
+                    //While there are events in the ResultSet variable, add each one of them to the ArrayList of Strings
+                    while(rs.next()) 
+                    {
+                        //get the full row of the event info and store it in a String variable
+                        String filteredEvent = rs.getString("EventDescription") + "/"
+                                            + rs.getString("EventDate") + "/"
+                                            + rs.getInt("TermID") + "/" 
+                                            + rs.getString("CalendarName");
+                        //add event to list of filtered events
+                        filteredEventsList.add(filteredEvent);
+                        System.out.println("filtered event is: " + filteredEvent);
+                    } 
+                }
+                catch (SQLException e) 
+                {
+                    System.err.println(e.getMessage() + "--- error at getListOfRules method in DBHandler class");
+                }
+            }
+        }
+        
+        System.out.println("****************************************************");
+        System.out.println("Full list of filtered events is: ");
+        System.out.println(filteredEventsList);
+        System.out.println("****************************************************");
+        
+        
+        return filteredEventsList;
+        //Query to get events that belong to terms in the ID list
+        
     }
     
 }

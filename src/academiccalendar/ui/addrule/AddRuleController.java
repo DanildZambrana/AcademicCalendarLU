@@ -6,12 +6,16 @@
 package academiccalendar.ui.addrule;
 
 import academiccalendar.database.DBHandler;
+import academiccalendar.ui.addevent.AddEventController;
 import academiccalendar.ui.main.FXMLDocumentController;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -70,17 +74,16 @@ public class AddRuleController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        ObservableList<String> terms = 
-        FXCollections.observableArrayList(
-           "FA SEM","SP SEM", "SU SEM", 
-           "FA I MBA", "FA II MBA", "SP I MBA", "SP II MBA", "SU MBA",
-           "FA QTR", "WIN QTR", "SP QTR", "SU QTR",
-           "FA 1st Half", "FA 2nd Half", "SP 1st Half", "SP 2nd Half",
-           "Campus General", "Campus STC", "Campus BV",
-           "Holiday"
-        );
+        //Get the list of exisitng terms from the database and show them in the correspondent drop-down menu
+         try {
+             //Get terms from database and store them in the ObservableList variable "terms"
+             ObservableList<String> terms = databaseHandler.getListOfTerms();
+             //Show list of terms in the drop-down menu
+             termSelect.setItems(terms);
+         } catch (SQLException ex) {
+             Logger.getLogger(AddEventController.class.getName()).log(Level.SEVERE, null, ex);
+         }
         
-        termSelect.setItems(terms);
         
         // ******** Code below is for Draggable windows **********    
         

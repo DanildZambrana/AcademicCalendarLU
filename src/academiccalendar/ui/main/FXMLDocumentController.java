@@ -29,6 +29,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -41,6 +42,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -106,6 +108,8 @@ public class FXMLDocumentController implements Initializable {
     //--------------------------------------------------------------------
     //---------Database Object -------------------------------------------
     DBHandler databaseHandler;
+    
+    
     @FXML
     private VBox colorRootPane;
     // Color pickers
@@ -123,6 +127,32 @@ public class FXMLDocumentController implements Initializable {
     private JFXColorPicker allCampusCP;
     @FXML
     private JFXColorPicker allHolidayCP;
+    
+    
+    // Check Boxes
+    @FXML
+    private JFXCheckBox springSemCheckBox;
+    @FXML
+    private JFXCheckBox fallSemCheckBox;
+    @FXML
+    private JFXCheckBox allQtrCheckBox;
+    @FXML
+    private JFXCheckBox allMbaCheckBox;
+    @FXML
+    private JFXCheckBox allHalfCheckBox;
+    @FXML
+    private JFXCheckBox allCampusCheckBox;
+    @FXML
+    private JFXCheckBox allHolidayCheckBox;
+    
+    
+    //Other global variables for the class
+    public static boolean workingOnCalendar = false;
+    public static boolean checkBoxesHaveBeenClicked = false;
+    
+    //**************************************************************************
+    //**************************************************************************
+    //**************************************************************************
     
     // Events
     private void addEvent(VBox day) {
@@ -939,23 +969,33 @@ public class FXMLDocumentController implements Initializable {
     }
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) {    
+    public void initialize(URL url, ResourceBundle rb) {
         
-    // Make empty calendar
-    initializeCalendarGrid();
-    initializeCalendarWeekdayHeader();
-    initializeMonthSelector();
+        
+        
+        // Make empty calendar
+        initializeCalendarGrid();
+        initializeCalendarWeekdayHeader();
+        initializeMonthSelector();
    
     
-    // Set Depths
-    JFXDepthManager.setDepth(scrollPane, 1);
+        // Set Depths
+        JFXDepthManager.setDepth(scrollPane, 1);
 
-    //*** Instantiate DBHandler object *******************
-    databaseHandler = new DBHandler();
-    //****************************************************
+        //*** Instantiate DBHandler object *******************
+        databaseHandler = new DBHandler();
+        //****************************************************
 
-     initalizeColorPicker();
-    }    
+        //Initialize all Color Pickers. Show saved colors for specific terms
+        initalizeColorPicker();
+     
+        //If the user is not working on any new or existing calendar, disable the filtering check boxes
+        disableCheckBoxes();
+    }
+
+    //**********************************************************************************
+    //**********************************************************************************
+    //**********************************************************************************
     
     // Side - menu buttons 
     @FXML
@@ -1001,8 +1041,270 @@ public class FXMLDocumentController implements Initializable {
         manageTermsEvent();
     }
 
-
-
-
-
+    //******************************************************************************************
+    //******************************************************************************************
+    //******************************************************************************************
+    
+    public void disableCheckBoxes(){
+        
+        //Disable all check boxes for filtering events
+        fallSemCheckBox.setDisable(true);
+        springSemCheckBox.setDisable(true);
+        //summerSemCheckBox.setDisable(true);
+        allQtrCheckBox.setDisable(true);
+        allMbaCheckBox.setDisable(true);
+        allHalfCheckBox.setDisable(true);
+        allCampusCheckBox.setDisable(true);
+        allHolidayCheckBox.setDisable(true);
+        fallSemCheckBox.setDisable(true);
+        //allTraTrbCheckBox.setDisable(true);
+    }
+    
+    public void enableCheckBoxes(){
+        
+        //Enable all check boxes for filtering events
+        fallSemCheckBox.setDisable(false);
+        springSemCheckBox.setDisable(false);
+        //summerSemCheckBox.setDisable(false);
+        allQtrCheckBox.setDisable(false);
+        allMbaCheckBox.setDisable(false);
+        allHalfCheckBox.setDisable(false);
+        allCampusCheckBox.setDisable(false);
+        allHolidayCheckBox.setDisable(false);
+        fallSemCheckBox.setDisable(false);
+        //allTraTrbCheckBox.setDisable(false);
+    }
+    
+    //******************************************************************************************
+    //******************************************************************************************
+    //******************************************************************************************
+    
+    
+    //This function is constantly checking if any of the checkboxes is selected or deselected
+    //and therefore, populate the calendar with the events of the terms that are selected
+    
+    @FXML
+    private void handleCheckBoxAction(ActionEvent e)
+    {
+        System.out.println("have check boxes been cliked: " + checkBoxesHaveBeenClicked);
+        if (!checkBoxesHaveBeenClicked)
+        {
+            checkBoxesHaveBeenClicked = true;
+            System.out.println("have check boxes been cliked: " + checkBoxesHaveBeenClicked);
+        }
+        
+        //ArrayList that will hold all the filtered events based on the selection of what terms are visible
+        ArrayList<String> termsToFilter = new ArrayList();
+        
+        //Check each of the checkboxes and call the appropiate queries to
+        //show only the events that belong to the term(s) the user selects
+        
+        //FA SEM
+        if (fallSemCheckBox.isSelected())
+        {
+            System.out.println("Fall Sem checkbox is selected");
+            termsToFilter.add("FA SEM");
+        }
+        
+        if (!fallSemCheckBox.isSelected())
+        {
+            System.out.println("Fall Sem checkbox is now deselected");
+            int auxIndex = termsToFilter.indexOf("FA SEM");
+            if (auxIndex != -1)
+            {
+                termsToFilter.remove(auxIndex);
+            }
+        }
+        
+        
+        //SP SEM
+        if (springSemCheckBox.isSelected())
+        {
+            System.out.println("Spring Sem checkbox is selected");
+            termsToFilter.add("SP SEM");
+        }
+        if (!springSemCheckBox.isSelected())
+        {
+            System.out.println("Spring Sem checkbox is now deselected");
+            int auxIndex = termsToFilter.indexOf("SP SEM");
+            if (auxIndex != -1)
+            {
+                termsToFilter.remove(auxIndex);
+            }
+        }
+        
+        // This is commented out because the SU SEM colorpicker and checkbox do not exist yet
+        /*
+        //SU SEM
+        if (summerSemCheckBox.isSelected())
+        {
+            System.out.println("SUMER Sem checkbox is selected");
+            termsToFilter.add("SU SEM");
+        }
+        if (!summerSemCheckBox.isSelected())
+        {
+            System.out.println("SUMMER Sem checkbox is now deselected");
+            int auxIndex = termsToFilter.indexOf("SU SEM");
+            if (auxIndex != -1)
+            {
+                termsToFilter.remove(auxIndex);
+            }
+        }
+        */
+        
+        // ALL QTR
+        if (allQtrCheckBox.isSelected())
+        {
+            System.out.println("All QTR checkbox is selected");
+            termsToFilter.add("QTR");
+        }
+        if (!allQtrCheckBox.isSelected())
+        {
+            System.out.println("All QTR checkbox is now deselected");
+            int auxIndex = termsToFilter.indexOf("QTR");
+            if (auxIndex != -1)
+            {
+                termsToFilter.remove(auxIndex);
+            }
+        }
+        
+        // All MBA
+        if (allMbaCheckBox.isSelected())
+        {
+            System.out.println("All MBA checkbox is selected");
+            termsToFilter.add("MBA");
+        }
+        if (!allMbaCheckBox.isSelected())
+        {
+            System.out.println("All MBA checkbox is now deselected");
+            int auxIndex = termsToFilter.indexOf("MBA");
+            if (auxIndex != -1)
+            {
+                termsToFilter.remove(auxIndex);
+            }
+        }
+        
+        // All Half
+        if (allHalfCheckBox.isSelected())
+        {
+            System.out.println("All Half checkbox is selected");
+            termsToFilter.add("Half");
+        }
+        if (!allHalfCheckBox.isSelected())
+        {
+            System.out.println("All Half checkbox is now deselected");
+            int auxIndex = termsToFilter.indexOf("Half");
+            if (auxIndex != -1)
+            {
+                termsToFilter.remove(auxIndex);
+            }
+        }
+        
+        
+        // All Campus
+        if (allCampusCheckBox.isSelected())
+        {
+            System.out.println("All Campus checkbox is selected");
+            termsToFilter.add("Campus");
+        }
+        if (!allCampusCheckBox.isSelected())
+        {
+            System.out.println("All Campus checkbox is now deselected");
+            int auxIndex = termsToFilter.indexOf("Campus");
+            if (auxIndex != -1)
+            {
+                termsToFilter.remove(auxIndex);
+            }
+        }
+        
+        // All Holiday
+        if (allHolidayCheckBox.isSelected())
+        {
+            System.out.println("All Holiday checkbox is selected");
+            termsToFilter.add("Holiday");
+        }
+        if (!allHolidayCheckBox.isSelected())
+        {
+            System.out.println("All Holiday checkbox is now deselected");
+            int auxIndex = termsToFilter.indexOf("Holiday");
+            if (auxIndex != -1)
+            {
+                termsToFilter.remove(auxIndex);
+            }
+        }
+        
+        
+        // This is commented out because the ALL TRA/TRB colorpicker and checkbox do not exist yet
+        /*
+        // All TRA/TRB
+        if (allTraTrbCheckBox.isSelected())
+        {
+            System.out.println("All TRA/TRB checkbox is selected");
+            termsToFilter.add("TRA");
+            termsToFilter.add("TRB");
+        }
+        if (!allTraTrbCheckBox.isSelected())
+        {
+            System.out.println("All Holiday checkbox is now deselected");
+            int auxIndex = termsToFilter.indexOf("TRA");
+            int auxIndex2 = termsToFilter.indexOf("TRB");
+            if (auxIndex != -1)
+            {
+                termsToFilter.remove(auxIndex);
+            }
+            if (auxIndex2 != -1)
+            {
+                termsToFilter.remove(auxIndex2);
+            }
+        }
+        */
+        
+        
+        System.out.println("terms to filter list: " + termsToFilter);
+        
+        //Get name of the current calendar that the user is working on
+        String calName = Model.getInstance().calendar_name;
+        
+        System.out.println("and calendarName is: " + calName);
+        
+        if (termsToFilter.isEmpty())
+        {
+            System.out.println("terms are not selected. No events have to appear on calendar. Just call loadCalendarLabels method in the RepaintView method");
+        }
+        else
+        {
+            System.out.println("Call the appropiate function to populate the month with the filtered events");
+            //Get List of Filtered Events and store all events in an ArrayList variable
+            ArrayList<String> filteredEventsList = databaseHandler.getFilteredEvents(termsToFilter, calName);
+            
+            System.out.println("List of Filtered events is: " + filteredEventsList);
+        
+            //Repaint or reload the events based on the selected terms
+            showFilteredEventsInMonth(filteredEventsList);
+        }
+        
+    
+    }
+    
+    
+    
+    public void showFilteredEventsInMonth(ArrayList<String> filteredEventsList) {
+        
+        System.out.println("I am in the show filtered events in month function");
+        
+        for (int i=0; i < filteredEventsList.size(); i++)
+        {
+            String[] eventInfo = filteredEventsList.get(i).split("/");
+            String eventDescript = eventInfo[0];
+            String eventDate = eventInfo[1];
+            int eventTermID = Integer.parseInt(eventInfo[2]);
+            String eventCalName = eventInfo[3];
+            System.out.println(eventDescript);
+            System.out.println(eventDate);
+            System.out.println(eventTermID);
+            System.out.println(eventCalName);
+        }
+    }
+    
+    
 }
