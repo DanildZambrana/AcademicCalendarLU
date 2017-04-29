@@ -179,6 +179,9 @@ public class ListCalendarsController implements Initializable {
         //Enable the checkboxes for filtering events, now that the user is actually working on a calendar
         mainController.enableCheckBoxes();
         
+        //Enable the buttons that work with rules
+        //mainController.enableButtons();
+        
         // Close the window after opening and loading the selected calendar
         Stage stage = (Stage) rootPane.getScene().getWindow();
         stage.close();
