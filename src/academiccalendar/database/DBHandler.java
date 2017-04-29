@@ -38,7 +38,8 @@ public class DBHandler {
                                     "FA QTR", "WIN QTR", "SP QTR", "SU QTR",
                                     "FA 1st Half", "FA 2nd Half", "SP 1st Half", "SP 2nd Half",
                                     "Campus General", "Campus STC", "Campus BV",
-                                    "Holiday"};
+                                    "Holiday",
+                                    "FA TRA", "SP TRA", "SU TRA", "FA TRB", "SP TRB", "SU TRB"};
     
     private static String defaultColor = "255-255-255";  //white is the default color
     
@@ -644,7 +645,7 @@ public class DBHandler {
         String getTermColorQuery = "SELECT TermColor FROM TERMS "
                                 + "WHERE TERMS.TermID=" + auxTermID;
         
-        System.out.println("Query to get TermName is: " + getTermColorQuery);
+        //System.out.println("Query to get TermName is: " + getTermColorQuery);
         
         
         ResultSet res = executeQuery(getTermColorQuery);
@@ -662,12 +663,13 @@ public class DBHandler {
         } 
         
         //test function for correct result
+        /*
         System.out.println("-----------------------------------------------------");
         System.out.println("-----------------------------------------------------");
         System.out.println("Term Color for " + auxTermID + " is: " + termColor);
         System.out.println("-----------------------------------------------------");
         System.out.println("-----------------------------------------------------");
-        
+        */
         
         
         return termColor;
@@ -680,7 +682,7 @@ public class DBHandler {
                         + "WHERE TERMS.TermName LIKE " 
                         + "'%" + term + "%'";
         
-        System.out.println("Query to get related terms is: " + setTermColorAction);
+        //System.out.println("Query to get related terms is: " + setTermColorAction);
         
         executeAction(setTermColorAction);
     

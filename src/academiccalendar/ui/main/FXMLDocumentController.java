@@ -146,6 +146,15 @@ public class FXMLDocumentController implements Initializable {
     private JFXCheckBox allHolidayCheckBox;
     
     
+    /*
+    // Tools Tab
+    @FXML
+    private VBox toolsRootPane;
+    @FXML
+    private JFXButton manageRulesButton;   // this name has to be changed in the ID name on the FXMLDocument.fxml file, but styling of the button is lost because of the name change (menuButton -> manageRulesButton)
+    */
+    
+    
     //Other global variables for the class
     public static boolean workingOnCalendar = false;
     public static boolean checkBoxesHaveBeenClicked = false;
@@ -464,8 +473,17 @@ public class FXMLDocumentController implements Initializable {
         // 1. Correct calendar labels based on Gregorian Calendar 
         // 2. Display events known to database
         
-        loadCalendarLabels(); 
-        populateMonthWithEvents();
+        loadCalendarLabels();
+        if (!checkBoxesHaveBeenClicked)
+        {
+            populateMonthWithEvents();
+        }
+        else
+        {
+            ActionEvent actionEvent = new ActionEvent();
+            handleCheckBoxAction(actionEvent);
+        }
+        //populateMonthWithEvents();
     }
     
     private void populateMonthWithEvents(){
@@ -989,8 +1007,11 @@ public class FXMLDocumentController implements Initializable {
         //Initialize all Color Pickers. Show saved colors for specific terms
         initalizeColorPicker();
      
-        //If the user is not working on any new or existing calendar, disable the filtering check boxes
+        //If the user is not working on any new or existing calendar, disable the filtering check boxes and rules buttons
         disableCheckBoxes();
+        // I am still working on this function and issue
+        //disableButtons();  
+        
     }
 
     //**********************************************************************************
@@ -1045,6 +1066,19 @@ public class FXMLDocumentController implements Initializable {
     //******************************************************************************************
     //******************************************************************************************
     
+     ///******* I am still working on these functions and issues  ********
+    /*
+    public void disableButtons(){
+        
+        manageRulesButton.setDisable(true);
+    }
+    
+    public void enableButtons(){
+        
+        manageRulesButton.setDisable(false);
+    }
+    */
+    
     public void disableCheckBoxes(){
         
         //Disable all check boxes for filtering events
@@ -1073,6 +1107,21 @@ public class FXMLDocumentController implements Initializable {
         allHolidayCheckBox.setDisable(false);
         fallSemCheckBox.setDisable(false);
         //allTraTrbCheckBox.setDisable(false);
+    }
+    
+    public void selectCheckBoxes(){
+        
+        //Set ALL check boxes for filtering events to be selected
+        fallSemCheckBox.setSelected(true);
+        springSemCheckBox.setSelected(true);
+        //summerSemCheckBox.setSelected(true);
+        allQtrCheckBox.setSelected(true);
+        allMbaCheckBox.setSelected(true);
+        allHalfCheckBox.setSelected(true);
+        allCampusCheckBox.setSelected(true);
+        allHolidayCheckBox.setSelected(true);
+        fallSemCheckBox.setSelected(true);
+        //allTraTrbCheckBox.setSelected(true);
     }
     
     //******************************************************************************************
@@ -1270,6 +1319,7 @@ public class FXMLDocumentController implements Initializable {
         if (termsToFilter.isEmpty())
         {
             System.out.println("terms are not selected. No events have to appear on calendar. Just call loadCalendarLabels method in the RepaintView method");
+            loadCalendarLabels();
         }
         else
         {
@@ -1290,7 +1340,32 @@ public class FXMLDocumentController implements Initializable {
     
     public void showFilteredEventsInMonth(ArrayList<String> filteredEventsList) {
         
+        System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
         System.out.println("I am in the show filtered events in month function");
+        System.out.println("The list of filted events is: " + filteredEventsList);
+        System.out.println("****------******-------******--------");
+        
+        
+        
+        String calendarName = Model.getInstance().calendar_name;
+        
+        String currentMonth = monthLabel.getText();
+        System.out.println("currentMonth is: " + currentMonth);
+        int currentMonthIndex = Model.getInstance().getMonthIndex(currentMonth) + 1;
+        System.out.println("currentMonthIndex is: " + currentMonthIndex);
+        
+        int currentYear = Integer.parseInt(selectedYear.getValue());
+        System.out.println("CurrentYear is: " + currentYear);
+        System.out.println("****------******-------******--------");
+        System.out.println("****------******-------******--------");
+        
+       
+        System.out.println("Now the labels on the calendar are cleared");
+        loadCalendarLabels();
+        System.out.println("****------******-------******--------");
+        System.out.println("****------******-------******--------");
+        System.out.println("Now, the filtered events/labels will be shown/put on the calendar");
+        System.out.println("****------******-------******--------");
         
         for (int i=0; i < filteredEventsList.size(); i++)
         {
@@ -1303,6 +1378,30 @@ public class FXMLDocumentController implements Initializable {
             System.out.println(eventDate);
             System.out.println(eventTermID);
             System.out.println(eventCalName);
+            
+            String[] dateParts = eventDate.split("-");
+            int eventYear = Integer.parseInt(dateParts[0]);
+            int eventMonth = Integer.parseInt(dateParts[1]);
+            int eventDay = Integer.parseInt(dateParts[2]);
+            
+            //System.out.println("****------******-------******--------");
+            //System.out.println("the labels on the calendar were cleared");
+            //loadCalendarLabels();
+            System.out.println("****------******-------******--------");
+            System.out.println("Now I will check if currentYear equals eventYear. Result is:");
+            if (currentYear == eventYear)
+            {
+                System.out.println("Yes, both year match.");
+                System.out.println("Now I will check if the month index equals the event's month. REsult is");
+                if (currentMonthIndex == eventMonth)
+                {
+                    System.out.println("Yes they are the same. Now I will call showDate function");
+                    showDate(eventDay, eventDescript, eventTermID);
+                }
+            }
+            //showDate(eventDay, eventDescript, eventTermID);
+            
+            
         }
     }
     
