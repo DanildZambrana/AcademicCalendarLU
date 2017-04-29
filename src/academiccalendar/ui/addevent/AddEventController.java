@@ -157,7 +157,10 @@ public class AddEventController implements Initializable {
         }
         
         //Show event on the calendar
-        mainController.showDate(date.getValue().getDayOfMonth(), eventSubject, chosenTermID);
+        //mainController.showDate(date.getValue().getDayOfMonth(), eventSubject, chosenTermID);
+        
+        //Show the new event on the calendar according to the selected filters
+        mainController.repaintView();
             
         // Close the window
         Stage stage = (Stage) rootPane.getScene().getWindow();
