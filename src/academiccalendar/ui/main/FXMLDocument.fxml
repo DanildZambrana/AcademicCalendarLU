@@ -6,6 +6,7 @@
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTabPane?>
+<?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -140,6 +141,11 @@
                                           <Insets left="20.0" right="20.0" top="20.0" />
                                        </VBox.margin>
                                     </JFXButton>
+                                    <JFXToggleButton fx:id="dateToggle" prefHeight="51.0" prefWidth="389.0" selected="true" text="Dates sorted? (ascending)">
+                                       <font>
+                                          <Font size="13.0" />
+                                       </font>
+                                    </JFXToggleButton>
                                  </children>
                               </VBox>
                            </children>
@@ -163,7 +169,7 @@
                                                    </HBox.margin>
                                                 </Label>
                                                 <JFXColorPicker fx:id="fallSemCP" accessibleRole="BUTTON" editable="true" prefHeight="24.0" prefWidth="50.0" promptText="Pick Color" />
-                                                <JFXCheckBox fx:id="fallSemCheckBox" onAction="#handleCheckBoxAction" checkedColor="#777777" selected="true" text=" visible?" />
+                                                <JFXCheckBox fx:id="fallSemCheckBox" checkedColor="#777777" onAction="#handleCheckBoxAction" selected="true" text=" visible?" />
                                              </children>
                                              <VBox.margin>
                                                 <Insets top="10.0" />
@@ -180,7 +186,7 @@
                                                    </HBox.margin>
                                                 </Label>
                                                 <JFXColorPicker fx:id="springSemCP" accessibleRole="BUTTON" editable="true" prefHeight="24.0" prefWidth="50.0" promptText="Pick Color" />
-                                                <JFXCheckBox fx:id="springSemCheckBox" onAction="#handleCheckBoxAction" checkedColor="#777777" selected="true" text=" visible?" />
+                                                <JFXCheckBox fx:id="springSemCheckBox" checkedColor="#777777" onAction="#handleCheckBoxAction" selected="true" text=" visible?" />
                                              </children>
                                              <VBox.margin>
                                                 <Insets top="10.0" />
@@ -188,6 +194,23 @@
                                              <padding>
                                                 <Insets right="30.0" />
                                              </padding>
+                                          </HBox>
+                                          <HBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="73.0" prefHeight="43.0" prefWidth="304.0" spacing="20.0">
+                                             <children>
+                                                <Label text="Summer SEM: ">
+                                                   <HBox.margin>
+                                                      <Insets right="5.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <JFXColorPicker fx:id="summerSemCP" accessibleRole="BUTTON" editable="true" prefHeight="24.0" prefWidth="50.0" promptText="Pick Color" />
+                                                <JFXCheckBox fx:id="summerSemCheckBox" checkedColor="#777777" onAction="#handleCheckBoxAction" selected="true" text=" visible?" />
+                                             </children>
+                                             <padding>
+                                                <Insets right="30.0" />
+                                             </padding>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
                                           </HBox>
                                           <HBox alignment="CENTER_RIGHT" prefHeight="43.0" prefWidth="304.0" spacing="20.0">
                                              <children>
@@ -197,7 +220,7 @@
                                                    </HBox.margin>
                                                 </Label>
                                                 <JFXColorPicker fx:id="allQtrCP" accessibleRole="BUTTON" editable="true" prefHeight="24.0" prefWidth="50.0" promptText="a" />
-                                                <JFXCheckBox fx:id="allQtrCheckBox" onAction="#handleCheckBoxAction" checkedColor="#777777" selected="true" text=" visible?" />
+                                                <JFXCheckBox fx:id="allQtrCheckBox" checkedColor="#777777" onAction="#handleCheckBoxAction" selected="true" text=" visible?" />
                                              </children>
                                              <VBox.margin>
                                                 <Insets top="10.0" />
@@ -214,7 +237,7 @@
                                                    </HBox.margin>
                                                 </Label>
                                                 <JFXColorPicker fx:id="allMbaCP" accessibleRole="BUTTON" editable="true" prefHeight="24.0" prefWidth="50.0" promptText="a" />
-                                                <JFXCheckBox fx:id="allMbaCheckBox" onAction="#handleCheckBoxAction" checkedColor="#777777" selected="true" text=" visible?" />
+                                                <JFXCheckBox fx:id="allMbaCheckBox" checkedColor="#777777" onAction="#handleCheckBoxAction" selected="true" text=" visible?" />
                                              </children>
                                              <VBox.margin>
                                                 <Insets top="10.0" />
@@ -231,7 +254,7 @@
                                                    </HBox.margin>
                                                 </Label>
                                                 <JFXColorPicker fx:id="allHalfCP" accessibleRole="BUTTON" editable="true" prefHeight="24.0" prefWidth="50.0" promptText="a" />
-                                                <JFXCheckBox fx:id="allHalfCheckBox" onAction="#handleCheckBoxAction" checkedColor="#777777" selected="true" text=" visible?" />
+                                                <JFXCheckBox fx:id="allHalfCheckBox" checkedColor="#777777" onAction="#handleCheckBoxAction" selected="true" text=" visible?" />
                                              </children>
                                              <VBox.margin>
                                                 <Insets top="10.0" />
@@ -248,7 +271,7 @@
                                                    </HBox.margin>
                                                 </Label>
                                                 <JFXColorPicker fx:id="allCampusCP" accessibleRole="BUTTON" editable="true" prefHeight="24.0" prefWidth="50.0" promptText="a" />
-                                                <JFXCheckBox fx:id="allCampusCheckBox" onAction="#handleCheckBoxAction" checkedColor="#777777" selected="true" text=" visible?" />
+                                                <JFXCheckBox fx:id="allCampusCheckBox" checkedColor="#777777" onAction="#handleCheckBoxAction" selected="true" text=" visible?" />
                                              </children>
                                              <VBox.margin>
                                                 <Insets top="10.0" />
@@ -265,7 +288,7 @@
                                                    </HBox.margin>
                                                 </Label>
                                                 <JFXColorPicker fx:id="allHolidayCP" accessibleRole="BUTTON" editable="true" prefHeight="24.0" prefWidth="50.0" promptText="a" />
-                                                <JFXCheckBox fx:id="allHolidayCheckBox" onAction="#handleCheckBoxAction" checkedColor="#777777" selected="true" text=" visible?" />
+                                                <JFXCheckBox fx:id="allHolidayCheckBox" checkedColor="#777777" onAction="#handleCheckBoxAction" selected="true" text=" visible?" />
                                              </children>
                                              <VBox.margin>
                                                 <Insets top="10.0" />
@@ -273,6 +296,23 @@
                                              <padding>
                                                 <Insets right="30.0" />
                                              </padding>
+                                          </HBox>
+                                          <HBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="391.0" prefHeight="43.0" prefWidth="304.0" spacing="20.0">
+                                             <children>
+                                                <Label text="All TRA/TRB:">
+                                                   <HBox.margin>
+                                                      <Insets right="5.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <JFXColorPicker fx:id="traTrbCP" accessibleRole="BUTTON" editable="true" prefHeight="24.0" prefWidth="50.0" promptText="a" />
+                                                <JFXCheckBox fx:id="allTraTrbCheckBox" checkedColor="#777777" onAction="#handleCheckBoxAction" selected="true" text=" visible?" />
+                                             </children>
+                                             <padding>
+                                                <Insets right="30.0" />
+                                             </padding>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
                                           </HBox>
                                        </children>
                                     </VBox>
