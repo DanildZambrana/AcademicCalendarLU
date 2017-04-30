@@ -1,10 +1,9 @@
-
-
 /*
  * @Academic Calendar Version 1.0 3/7/2017
- * @owner and @author: FrumbSoftware
- * @Team Members: Paul Meyer, Karis Druckenmiller , Darick Cayton,Rudolfo Madriz
+ * @owner and @author: FrumbugSoftware
+ * @Team Members: Paul Meyer, Karis Druckenmiller, Darick Cayton, Rudolfo Madriz
  */
+
 package academiccalendar.ui.main;
 
 import academiccalendar.data.model.Model;
@@ -33,9 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
@@ -43,7 +40,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -52,7 +48,6 @@ import javafx.print.PrinterJob;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
@@ -69,7 +64,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -82,36 +76,25 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class FXMLDocumentController implements Initializable {
     
-    // Root pane
-    @FXML
-    private AnchorPane rootPane;
-    
+    // Calendar fields
     @FXML
     private Label monthLabel;
     @FXML
     private HBox weekdayHeader;
-    
-    // Combo/Select Boxes
-    @FXML
-    private JFXComboBox<String> selectedYear;
-    @FXML
-    private JFXListView<String> monthSelect;
-    
-    // Center area
     @FXML
     private GridPane calendarGrid;
     @FXML
-    private VBox centerArea;
-    @FXML
     private ScrollPane scrollPane;
     
-    //--------------------------------------------------------------------
-    //---------Database Object -------------------------------------------
-    DBHandler databaseHandler;
-    
-    
+    // Selections boxes
     @FXML
-    private VBox colorRootPane;
+    private JFXComboBox<String> selectedYear;
+    @FXML
+    private JFXListView<String> monthSelect;   
+    
+    //--------- Database Handler -----------------------------------------
+    DBHandler databaseHandler;
+    //--------------------------------------------------------------------
     
     // Color pickers
     @FXML
@@ -152,26 +135,15 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private JFXCheckBox allHolidayCheckBox;
     @FXML
-    private JFXCheckBox allTraTrbCheckBox;
+    private JFXCheckBox allTraTrbCheckBox;    
     
-    /*
-    // Tools Tab
-    @FXML
-    private VBox toolsRootPane;
-    @FXML
-    private JFXButton manageRulesButton;   // this name has to be changed in the ID name on the FXMLDocument.fxml file, but styling of the button is lost because of the name change (menuButton -> manageRulesButton)
-    */
-    
-    
-    //Other global variables for the class
+    // Other global variables for the class
     public static boolean workingOnCalendar = false;
     public static boolean checkBoxesHaveBeenClicked = false;
     
+    // For export date sorting
     @FXML
     private JFXToggleButton dateToggle;
-    
-    @FXML
-    private VBox toolsRootPane;
     
     //**************************************************************************
     //**************************************************************************
@@ -180,10 +152,12 @@ public class FXMLDocumentController implements Initializable {
     // Events
     private void addEvent(VBox day) {
         
-        // ONLY for days that have labels
+        // Purpose - Add event to a day
+        
+        // Do not add events to days without labels
         if(!day.getChildren().isEmpty()) {
             
-            // Get the day label
+            // Get the day number
             Label lbl = (Label) day.getChildren().get(0);
             System.out.println(lbl.getText());
             
@@ -192,7 +166,7 @@ public class FXMLDocumentController implements Initializable {
             Model.getInstance().event_month = Model.getInstance().getMonthIndex(monthSelect.getSelectionModel().getSelectedItem());      
             Model.getInstance().event_year = Integer.parseInt(selectedYear.getValue());
             
-            // When user clicks on any date in the calendar, event editor window opens
+            // Open add event view
             try {
                // Load root layout from fxml file.
                FXMLLoader loader = new FXMLLoader();
@@ -201,8 +175,10 @@ public class FXMLDocumentController implements Initializable {
                Stage stage = new Stage(StageStyle.UNDECORATED);
                stage.initModality(Modality.APPLICATION_MODAL); 
 
+               // Pass main controller reference to view
                AddEventController eventController = loader.getController();
                eventController.setMainController(this);
+               
                // Show the scene containing the root layout.
                Scene scene = new Scene(rootLayout);
                stage.setScene(scene);
@@ -215,12 +191,11 @@ public class FXMLDocumentController implements Initializable {
     
     private void editEvent(VBox day, String descript, String termID) {
         
-        // Store event day and month in data singleton
+        // Store event fields in data singleton
         Label dayLbl = (Label)day.getChildren().get(0);
         Model.getInstance().event_day = Integer.parseInt(dayLbl.getText());
         Model.getInstance().event_month = Model.getInstance().getMonthIndex(monthSelect.getSelectionModel().getSelectedItem());      
         Model.getInstance().event_year = Integer.parseInt(selectedYear.getValue());
-        
         Model.getInstance().event_subject = descript;
         Model.getInstance().event_term_id = Integer.parseInt(termID);
 
@@ -233,8 +208,10 @@ public class FXMLDocumentController implements Initializable {
            Stage stage = new Stage(StageStyle.UNDECORATED);
            stage.initModality(Modality.APPLICATION_MODAL); 
 
+           // Pass main controller reference to view
            EditEventController eventController = loader.getController();
            eventController.setMainController(this);
+           
            // Show the scene containing the root layout.
            Scene scene = new Scene(rootLayout);
            stage.setScene(scene);
@@ -246,7 +223,7 @@ public class FXMLDocumentController implements Initializable {
     }    
     
     public void newCalendarEvent() {
-        // When the user clicks "New Calendar" pop up window that let's them enter dates
+        // New Calendar view
          try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
@@ -255,8 +232,10 @@ public class FXMLDocumentController implements Initializable {
             Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.initModality(Modality.APPLICATION_MODAL); 
 
+            // Pass main controller reference to view
             AddCalendarController calendarController = loader.getController();
             calendarController.setMainController(this);
+            
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             stage.setScene(scene);
@@ -268,7 +247,7 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private void listCalendarsEvent() {
-        // When the user clicks "New Calendar" pop up window that let's them enter dates
+        // List Calendar view
          try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
@@ -277,8 +256,10 @@ public class FXMLDocumentController implements Initializable {
             Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.initModality(Modality.APPLICATION_MODAL); 
 
+            // Pass main controller reference to view
             ListCalendarsController listController = loader.getController();
             listController.setMainController(this);
+            
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             stage.setScene(scene);
@@ -290,8 +271,7 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private void manageTermsEvent() {
-        // When the user clicks "Manage Term Dates" pop up window that let's 
-        // them change starting dates for terms
+        // Manage Terms view
          try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
@@ -300,8 +280,10 @@ public class FXMLDocumentController implements Initializable {
             Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.initModality(Modality.APPLICATION_MODAL); 
 
+            // Pass main controller reference to view
             ListTermsController listController = loader.getController();
             listController.setMainController(this);
+            
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             stage.setScene(scene);
@@ -313,7 +295,7 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private void listRulesEvent() {
-        // When the user clicks "Manage Rules" pop up window that let's them manage rules
+        // List Rules view
          try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
@@ -322,6 +304,7 @@ public class FXMLDocumentController implements Initializable {
             Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.initModality(Modality.APPLICATION_MODAL); 
 
+            // Pass main controller reference to view
             ListRulesController listController = loader.getController();
             listController.setMainController(this);
             // Show the scene containing the root layout.
@@ -335,7 +318,7 @@ public class FXMLDocumentController implements Initializable {
     }
     
     public void newRuleEvent() {
-        // When the user clicks "New Rule" pop up window appears
+        // New Rule view
          try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
@@ -344,8 +327,10 @@ public class FXMLDocumentController implements Initializable {
             Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.initModality(Modality.APPLICATION_MODAL); 
 
+            // Pass main controller reference to view
             AddRuleController ruleController = loader.getController();
             ruleController.setMainController(this);
+            
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             stage.setScene(scene);
@@ -356,30 +341,33 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private void initializeMonthSelector(){
+        
         // Add event listener to each month list item, allowing user to change months
         monthSelect.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            
                 @Override
                 public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                    
-                    // Note: The line of code "monthSelect.getItems().clear()" invokes this change listener
-                    // and the newValue becomes NULL. When that happens, we will just skip the following instructions
-                    // as if nothing happened.
-                    // See method calendarGenerate() for that call.
+                
+                    // Necessary to check for null because change listener will
+                    // also detect clear() calls
                     if (newValue != null) {
+                        
                         // Show selected/current month above calendar
                         monthLabel.setText(newValue);
                         
                         // Update the VIEWING MONTH
                         Model.getInstance().viewing_month = Model.getInstance().getMonthIndex(newValue);
 
+                        // Update view
                         repaintView();
                     }
                     
                 }
             });
         
-              // Add event listener to each month list item, allowing user to change months
+        // Add event listener to each year item, allowing user to change years
         selectedYear.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            
                 @Override
                 public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                     
@@ -388,6 +376,7 @@ public class FXMLDocumentController implements Initializable {
                         // Update the VIEWING YEAR
                         Model.getInstance().viewing_year = Integer.parseInt(newValue);
                         
+                        // Update view
                         repaintView();
                     }
                 }
@@ -402,17 +391,19 @@ public class FXMLDocumentController implements Initializable {
         
         // Note: Java's Gregorian Calendar class gives us the right
         // "first day of the month" for a given calendar & month
+        // This accounts for Leap Year
         GregorianCalendar gc = new GregorianCalendar(year, month, 1);
         int firstDay = gc.get(Calendar.DAY_OF_WEEK);
         int daysInMonth = gc.getActualMaximum(Calendar.DAY_OF_MONTH);
         
         // We are "offsetting" our start depending on what the
-        // first day of the month is
+        // first day of the month is.
+        // For example: Sunday start, Monday start, Wednesday start.. etc
         int offset = firstDay;
         int gridCount = 1;
         int lblCount = 1;
         
-       // Go through calendar grids
+       // Go through calendar grid
        for(Node node : calendarGrid.getChildren()){
            
            VBox day = (VBox) node;
@@ -450,12 +441,13 @@ public class FXMLDocumentController implements Initializable {
     public void calendarGenerate(){
         
         // Load year selection
-        selectedYear.getItems().clear(); // Invokes our change listener
+        selectedYear.getItems().clear(); // Note: Invokes its change listener
         selectedYear.getItems().add(Integer.toString(Model.getInstance().calendar_start));
         selectedYear.getItems().add(Integer.toString(Model.getInstance().calendar_end));
 
         // Select the first YEAR as default     
         selectedYear.getSelectionModel().selectFirst();
+        
         // Update the VIEWING YEAR
         Model.getInstance().viewing_year = Integer.parseInt(selectedYear.getSelectionModel().getSelectedItem());
         
@@ -465,20 +457,21 @@ public class FXMLDocumentController implements Initializable {
         // Get a list of all the months (1-12) in a year
         DateFormatSymbols dateFormat = new DateFormatSymbols();
         String months[] = dateFormat.getMonths();
-        System.out.println("Length:" + months.length);
         String[] spliceMonths = Arrays.copyOfRange(months, 0, 12);
         
         // Load month selection
-        monthSelect.getItems().clear();  // Note, this will invoke our change listener too
+        monthSelect.getItems().clear();
         monthSelect.getItems().addAll(spliceMonths);   
         
         // Select the first MONTH as default
         monthSelect.getSelectionModel().selectFirst();
         monthLabel.setText(monthSelect.getSelectionModel().getSelectedItem());
+        
         // Update the VIEWING MONTH
         Model.getInstance().viewing_month = 
                 Model.getInstance().getMonthIndex(monthSelect.getSelectionModel().getSelectedItem());
         
+        // Update view
         repaintView();
     }
     
@@ -502,11 +495,11 @@ public class FXMLDocumentController implements Initializable {
     
     private void populateMonthWithEvents(){
         
+        // Get viewing calendar
         String calendarName = Model.getInstance().calendar_name;
-        
         String currentMonth = monthLabel.getText();
-        int currentMonthIndex = Model.getInstance().getMonthIndex(currentMonth) + 1;
         
+        int currentMonthIndex = Model.getInstance().getMonthIndex(currentMonth) + 1;
         int currentYear = Integer.parseInt(selectedYear.getValue());
         
         // Query to get ALL Events from the selected calendar!!
@@ -851,7 +844,9 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private void changeColors(){
-        // Purpose - Update colors in database and calendar from color picker
+        
+        // Purpose - Take all chosen colors in the Colors menu and
+        // update each term's color in the database
         
         Color fallSemColor = fallSemCP.getValue();
         String fallSemRGB = getRGB(fallSemColor);
@@ -1026,13 +1021,10 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        
-        
         // Make empty calendar
         initializeCalendarGrid();
         initializeCalendarWeekdayHeader();
         initializeMonthSelector();
-   
     
         // Set Depths
         JFXDepthManager.setDepth(scrollPane, 1);
@@ -1222,7 +1214,7 @@ public class FXMLDocumentController implements Initializable {
         //SU SEM
         if (summerSemCheckBox.isSelected())
         {
-            System.out.println("SUMER Sem checkbox is selected");
+            System.out.println("SUMMER Sem checkbox is selected");
             termsToFilter.add("SU SEM");
         }
         if (!summerSemCheckBox.isSelected())

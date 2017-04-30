@@ -1,15 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package academiccalendar.ui.listrules;
 
 import academiccalendar.data.model.Model;
-import academiccalendar.ui.main.Rule;
 
 import academiccalendar.database.DBHandler;
-import academiccalendar.ui.editevent.EditEventController;
 import academiccalendar.ui.editrule.EditRuleController;
 import academiccalendar.ui.main.FXMLDocumentController;
 import java.io.IOException;
@@ -18,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,13 +38,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.apache.poi.ss.usermodel.DateUtil;
 
-/**
- * FXML Controller class
- *
- * @author Karis
- */
 public class ListRulesController implements Initializable {
 
     @FXML

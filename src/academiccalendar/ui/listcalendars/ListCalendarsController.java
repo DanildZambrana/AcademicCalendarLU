@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package academiccalendar.ui.listcalendars;
 
 import academiccalendar.data.model.Model;
@@ -32,11 +28,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-/**
- * FXML Controller class
- *
- * @author Karis
- */
 public class ListCalendarsController implements Initializable {
 
     // Main Controller -------------------------------

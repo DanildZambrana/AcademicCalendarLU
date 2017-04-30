@@ -1,7 +1,7 @@
 /*
  * @Academic Calendar Version 1.0 3/7/2017
  * @owner and @author: FrumbSoftware
- * @Team Members: Paul Meyer, Karis Druckenmiller , Darick Cayton,Rudolfo Madriz
+ * @Team Members: Paul Meyer, Karis Druckenmiller , Darick Cayton, Rodolfo Madriz
  */
 package academiccalendar.ui.main;
 
@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author Paul, Karis, Darick and Rudolfo #Frumbug 4 life
+ * @author Paul, Karis, Darick and Rodolfo #Frumbug 4 life
  */
 public class AcademicCalendar extends Application {
         
