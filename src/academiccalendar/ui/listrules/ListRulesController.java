@@ -239,7 +239,7 @@ public class ListRulesController implements Initializable {
             for (int i=0; i < listSize; i++)
             {
                 //Splits rule by EventDescription, TermID, and DaysFromStart
-                String[] auxRule = listOfRules.get(i).split("/");
+                String[] auxRule = listOfRules.get(i).split("~");
                 //Create event based on this rule
                 boolean eventWasCreated = createEventFromRule(auxRule[0], Integer.parseInt(auxRule[1]), auxRule[2], auxCalName);
                 
