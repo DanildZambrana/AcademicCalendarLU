@@ -112,11 +112,14 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private VBox colorRootPane;
+    
     // Color pickers
+    @FXML
+    private JFXColorPicker fallSemCP;
     @FXML
     private JFXColorPicker springSemCP;
     @FXML
-    private JFXColorPicker fallSemCP;
+    private JFXColorPicker summerSemCP;
     @FXML
     private JFXColorPicker allQtrCP;
     @FXML
@@ -127,13 +130,17 @@ public class FXMLDocumentController implements Initializable {
     private JFXColorPicker allCampusCP;
     @FXML
     private JFXColorPicker allHolidayCP;
+    @FXML
+    private JFXColorPicker traTrbCP;
     
     
-    // Check Boxes
+    // Check Boxes for filtering
+    @FXML
+    private JFXCheckBox fallSemCheckBox;
     @FXML
     private JFXCheckBox springSemCheckBox;
     @FXML
-    private JFXCheckBox fallSemCheckBox;
+    private JFXCheckBox summerSemCheckBox;
     @FXML
     private JFXCheckBox allQtrCheckBox;
     @FXML
@@ -144,7 +151,8 @@ public class FXMLDocumentController implements Initializable {
     private JFXCheckBox allCampusCheckBox;
     @FXML
     private JFXCheckBox allHolidayCheckBox;
-    
+    @FXML
+    private JFXCheckBox allTraTrbCheckBox;
     
     /*
     // Tools Tab
@@ -158,6 +166,12 @@ public class FXMLDocumentController implements Initializable {
     //Other global variables for the class
     public static boolean workingOnCalendar = false;
     public static boolean checkBoxesHaveBeenClicked = false;
+    
+    @FXML
+    private JFXToggleButton dateToggle;
+    
+    @FXML
+    private VBox toolsRootPane;
     
     //**************************************************************************
     //**************************************************************************
@@ -839,13 +853,17 @@ public class FXMLDocumentController implements Initializable {
     private void changeColors(){
         // Purpose - Update colors in database and calendar from color picker
         
+        Color fallSemColor = fallSemCP.getValue();
+        String fallSemRGB = getRGB(fallSemColor);
+        databaseHandler.setTermColor("FA SEM", fallSemRGB);
+        
         Color springSemColor = springSemCP.getValue();
         String springSemRGB = getRGB(springSemColor);
         databaseHandler.setTermColor("SP SEM", springSemRGB);
         
-        Color fallSemColor = fallSemCP.getValue();
-        String fallSemRGB = getRGB(fallSemColor);
-        databaseHandler.setTermColor("FA SEM", fallSemRGB);
+        Color summerSemColor = summerSemCP.getValue();
+        String summerSemRGB = getRGB(summerSemColor);
+        databaseHandler.setTermColor("SU SEM", summerSemRGB);
         
         Color allQtrColor = allQtrCP.getValue();
         String allQtrRGB = getRGB(allQtrColor);
@@ -867,17 +885,24 @@ public class FXMLDocumentController implements Initializable {
         String allHolidayRGB = getRGB(allHolidayColor);
         databaseHandler.setTermColor("Holiday", allHolidayRGB);
         
+        Color allTraTrbColor = traTrbCP.getValue();
+        String allTraTrbRGB = getRGB(allTraTrbColor);
+        databaseHandler.setTermColor("TRA", allTraTrbRGB);
+        databaseHandler.setTermColor("TRB", allTraTrbRGB);
+        
     }
     
     private void initalizeColorPicker(){
         
         String fallSemRGB = databaseHandler.getTermColor(databaseHandler.getTermID("FA SEM"));
         String springSemRGB = databaseHandler.getTermColor(databaseHandler.getTermID("SP SEM"));
+        String summerSemRGB = databaseHandler.getTermColor(databaseHandler.getTermID("SU SEM"));
         String mbaRGB = databaseHandler.getTermColor(databaseHandler.getTermID("FA I MBA"));
         String qtrRGB = databaseHandler.getTermColor(databaseHandler.getTermID("FA QTR"));
         String halfRGB = databaseHandler.getTermColor(databaseHandler.getTermID("FA 1st Half"));
         String campusRGB = databaseHandler.getTermColor(databaseHandler.getTermID("Campus General"));        
         String holidayRGB = databaseHandler.getTermColor(databaseHandler.getTermID("Holiday"));
+        String traTrbRGB = databaseHandler.getTermColor(databaseHandler.getTermID("FA TRA"));
         
         // Parse for rgb values for fall sem
         String[] colors = fallSemRGB.split("-");
@@ -886,6 +911,12 @@ public class FXMLDocumentController implements Initializable {
         fallSemCP.setValue(c);
         
         // Parse for rgb values for spring sem
+        colors = summerSemRGB.split("-");
+        red = colors[0]; green = colors[1]; blue = colors[2];
+        c = Color.rgb(Integer.parseInt(red),Integer.parseInt(green) ,Integer.parseInt(blue));
+        summerSemCP.setValue(c);
+        
+        // Parse for rgb values for summer sem
         colors = springSemRGB.split("-");
         red = colors[0]; green = colors[1]; blue = colors[2];
         c = Color.rgb(Integer.parseInt(red),Integer.parseInt(green) ,Integer.parseInt(blue));
@@ -920,6 +951,12 @@ public class FXMLDocumentController implements Initializable {
         red = colors[0]; green = colors[1]; blue = colors[2];
         c = Color.rgb(Integer.parseInt(red),Integer.parseInt(green) ,Integer.parseInt(blue));
         allHolidayCP.setValue(c);
+        
+        // Parse for rgb values for TRA/TRB
+        colors = traTrbRGB.split("-");
+        red = colors[0]; green = colors[1]; blue = colors[2];
+        c = Color.rgb(Integer.parseInt(red),Integer.parseInt(green) ,Integer.parseInt(blue));
+        traTrbCP.setValue(c);
         
     }
    
@@ -1084,14 +1121,14 @@ public class FXMLDocumentController implements Initializable {
         //Disable all check boxes for filtering events
         fallSemCheckBox.setDisable(true);
         springSemCheckBox.setDisable(true);
-        //summerSemCheckBox.setDisable(true);
+        summerSemCheckBox.setDisable(true);
         allQtrCheckBox.setDisable(true);
         allMbaCheckBox.setDisable(true);
         allHalfCheckBox.setDisable(true);
         allCampusCheckBox.setDisable(true);
         allHolidayCheckBox.setDisable(true);
         fallSemCheckBox.setDisable(true);
-        //allTraTrbCheckBox.setDisable(true);
+        allTraTrbCheckBox.setDisable(true);
     }
     
     public void enableCheckBoxes(){
@@ -1099,14 +1136,14 @@ public class FXMLDocumentController implements Initializable {
         //Enable all check boxes for filtering events
         fallSemCheckBox.setDisable(false);
         springSemCheckBox.setDisable(false);
-        //summerSemCheckBox.setDisable(false);
+        summerSemCheckBox.setDisable(false);
         allQtrCheckBox.setDisable(false);
         allMbaCheckBox.setDisable(false);
         allHalfCheckBox.setDisable(false);
         allCampusCheckBox.setDisable(false);
         allHolidayCheckBox.setDisable(false);
         fallSemCheckBox.setDisable(false);
-        //allTraTrbCheckBox.setDisable(false);
+        allTraTrbCheckBox.setDisable(false);
     }
     
     public void selectCheckBoxes(){
@@ -1114,14 +1151,14 @@ public class FXMLDocumentController implements Initializable {
         //Set ALL check boxes for filtering events to be selected
         fallSemCheckBox.setSelected(true);
         springSemCheckBox.setSelected(true);
-        //summerSemCheckBox.setSelected(true);
+        summerSemCheckBox.setSelected(true);
         allQtrCheckBox.setSelected(true);
         allMbaCheckBox.setSelected(true);
         allHalfCheckBox.setSelected(true);
         allCampusCheckBox.setSelected(true);
         allHolidayCheckBox.setSelected(true);
         fallSemCheckBox.setSelected(true);
-        //allTraTrbCheckBox.setSelected(true);
+        allTraTrbCheckBox.setSelected(true);
     }
     
     //******************************************************************************************
@@ -1182,8 +1219,6 @@ public class FXMLDocumentController implements Initializable {
             }
         }
         
-        // This is commented out because the SU SEM colorpicker and checkbox do not exist yet
-        /*
         //SU SEM
         if (summerSemCheckBox.isSelected())
         {
@@ -1199,7 +1234,6 @@ public class FXMLDocumentController implements Initializable {
                 termsToFilter.remove(auxIndex);
             }
         }
-        */
         
         // ALL QTR
         if (allQtrCheckBox.isSelected())
@@ -1281,10 +1315,7 @@ public class FXMLDocumentController implements Initializable {
                 termsToFilter.remove(auxIndex);
             }
         }
-        
-        
-        // This is commented out because the ALL TRA/TRB colorpicker and checkbox do not exist yet
-        /*
+       
         // All TRA/TRB
         if (allTraTrbCheckBox.isSelected())
         {
@@ -1306,7 +1337,6 @@ public class FXMLDocumentController implements Initializable {
                 termsToFilter.remove(auxIndex2);
             }
         }
-        */
         
         
         System.out.println("terms to filter list: " + termsToFilter);
