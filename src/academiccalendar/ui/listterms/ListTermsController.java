@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package academiccalendar.ui.listterms;
 
 import academiccalendar.data.model.Model;
 import academiccalendar.database.DBHandler;
-import academiccalendar.ui.editrule.EditRuleController;
 import academiccalendar.ui.editterm.EditTermController;
 import academiccalendar.ui.main.FXMLDocumentController;
 import academiccalendar.ui.main.Term;
