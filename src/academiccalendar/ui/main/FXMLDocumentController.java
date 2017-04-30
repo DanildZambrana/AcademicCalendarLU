@@ -1391,7 +1391,7 @@ public class FXMLDocumentController implements Initializable {
         
         for (int i=0; i < filteredEventsList.size(); i++)
         {
-            String[] eventInfo = filteredEventsList.get(i).split("/");
+            String[] eventInfo = filteredEventsList.get(i).split("~");
             String eventDescript = eventInfo[0];
             String eventDate = eventInfo[1];
             int eventTermID = Integer.parseInt(eventInfo[2]);
@@ -1406,9 +1406,7 @@ public class FXMLDocumentController implements Initializable {
             int eventMonth = Integer.parseInt(dateParts[1]);
             int eventDay = Integer.parseInt(dateParts[2]);
             
-            //System.out.println("****------******-------******--------");
-            //System.out.println("the labels on the calendar were cleared");
-            //loadCalendarLabels();
+            
             System.out.println("****------******-------******--------");
             System.out.println("Now I will check if currentYear equals eventYear. Result is:");
             if (currentYear == eventYear)
@@ -1421,11 +1419,8 @@ public class FXMLDocumentController implements Initializable {
                     showDate(eventDay, eventDescript, eventTermID);
                 }
             }
-            //showDate(eventDay, eventDescript, eventTermID);
-            
-            
         }
     }
     
     
-}
+} //End of FXMLDocumentController class

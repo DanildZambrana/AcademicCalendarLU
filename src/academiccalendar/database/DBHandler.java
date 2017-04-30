@@ -1,8 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//******************************************************************************************
+//******************************************************************************************
+
+//Packages and imports
+
 package academiccalendar.database;
 
 import java.sql.Connection;
@@ -30,9 +30,7 @@ public class DBHandler {
     private static Connection conn = null;
     private static Statement stmt = null;
     
-    //Arrays that contain the default programs, terms, and event type of the University
-    //private static String[] eventTypes = {"Academic", "Holiday", "Campus", "Sports"}; 
-    //private static String[] programs = {"Undergraduate", "Graduate (MBA)", "Online", "Accelerated Program"};
+    //Arrays that contain the default terms of the University
     private static String[] terms = {"FA SEM","SP SEM", "SU SEM", 
                                     "FA I MBA", "FA II MBA", "SP I MBA", "SP II MBA", "SU MBA",
                                     "FA QTR", "WIN QTR", "SP QTR", "SU QTR",
@@ -41,11 +39,13 @@ public class DBHandler {
                                     "Holiday",
                                     "FA TRA", "SP TRA", "SU TRA", "FA TRB", "SP TRB", "SU TRB"};
     
-    private static String defaultColor = "255-255-255";  //white is the default color
+    //Variable that contains the default color for the labels of events
+    private static String defaultColor = "255-255-255";
     
     //Variable that controls whether or not the tables have to be created and populated
     private static boolean tablesAlreadyExist = false;
     
+    //Variable that contains the default starting date for all terms
     private static String defaultTermStartDate = "2017-08-28";
     
     
@@ -63,38 +63,21 @@ public class DBHandler {
         }
         else {
             
+            // Creates all tables for the database
             createCalendarTable();
             createTermsTable();
             createEventsTable();
             createRulesTable();
         
+            //Insert default values into the tables and print them so programmer can check they were added correctly
             insertDefaultValuesIntoTables();
-            printAllDefaultRecords();
+            //The line below can be uncommented to allow programmer to check the default records present in tables
+            //printAllDefaultRecords();
+            
+            //Switched boolean variable tablesAlreadyExist to true because tables were just created
             tablesAlreadyExist = true;
+            
             System.out.println("the static variable tablesAlreadyExist was changed to true. THEREFORE, NO other table should try to be created");
-            
-            // the following lines are just here to test the correct functionality of the getListOfTerms method
-            try {
-                ObservableList<String> auxList = this.getListOfTerms();
-                //ArrayList<String> auxList = this.getListOfTerms();
-            } catch (SQLException ex) {
-                Logger.getLogger(DBHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            // the following lines are just here to test the correct functionality of the getTermID method
-            int getIDTest = this.getTermID("FA QTR");
-            
-            // the following lines are just here to test the correct functionality of the getTermName method
-            String nameAux = this.getTermName(2);
-            
-            // the following lines are just here to test the correct functionality of the getTermStartDate method
-            String auxTermDate = this.getTermStartDate(3);
-            
-            // the following lines are just here to test the correct functionality of the getListOfRules method
-            ArrayList<String> auxListOfRules= this.getListOfRules();
-            
-            // the following lines are just here to test the correct functionality of the getTermColor method
-            String colorAux = this.getTermColor(2);
             
             // the following lines are just here to test the correct functionality of the getListOfTermIDs method
             ArrayList<String> auxList = new ArrayList();
@@ -106,13 +89,12 @@ public class DBHandler {
             ArrayList<String> auxList2 = new ArrayList();
             auxList2.add("SEM");
             auxList2.add("MBA");
-            ArrayList<String> auxListOfFilteredEvents= this.getFilteredEvents(auxList2, "Test Name");
-            
-        }
-        
-        
+            ArrayList<String> auxListOfFilteredEvents= this.getFilteredEvents(auxList2, "Test Name");   
+        }   
     }
+    //***************************************************************************************************************************************************************
     
+    //***************************************************************************************************************************************************************
     //Create Connection between Java Application and the JDBC
     void createConnection() {
     
@@ -123,7 +105,9 @@ public class DBHandler {
             e.printStackTrace();
         }
     }
+    //***************************************************************************************************************************************************************
     
+    //***************************************************************************************************************************************************************
     //********** Functions that create the tables if they do not exist ***************************
     
     //**************************  CALENDARS Table  ***********************************************
@@ -156,7 +140,7 @@ public class DBHandler {
         }
     }
     
-    
+    //***************************************************************************************************************************************************************
     //**************************  TERMS Table  ***********************************************
     //Function that creates TERMS Table
     void createTermsTable(){
@@ -186,7 +170,9 @@ public class DBHandler {
         } finally {
         }
     }
-        
+    //***************************************************************************************************************************************************************
+    
+    //***************************************************************************************************************************************************************    
     //**************************  RULES Table  ***********************************************
     //Function that creates RULES Table
     void createRulesTable(){
@@ -207,8 +193,6 @@ public class DBHandler {
                         + "TermID integer not null,\n"
                         + "DaysFromStart integer,\n"
                         + "constraint " + TableName + "_PK primary key(EventDescription, TermID)"
-                        //+ "constraint " + TableName + "_FK1 foreign key (TermID) references TERMS(TermID),\n"
-                        //+ "constraint " + TableName + "_FK2 foreign key (EventDescription) references EVENTS(EventDescription)"
                         + ")";
                 stmt.execute(query1);
             }
@@ -218,9 +202,11 @@ public class DBHandler {
         } finally {
         }
     }
+    //***************************************************************************************************************************************************************
     
-    
-    //Create EVENTS Table
+    //***************************************************************************************************************************************************************
+    //**************************  EVENTS Table  ***********************************************
+    //Function that creates EVENTS Table
     void createEventsTable(){
         
         String TableName = "EVENTS";
@@ -251,11 +237,10 @@ public class DBHandler {
         } finally {
         }
     } 
+    //***************************************************************************************************************************************************************
+    //***************************************************************************************************************************************************************
     
-    //************************************************************************
-    //************************************************************************
-    
-    
+    //***************************************************************************************************************************************************************
     //Function that checks if a table in the database is empty (has no records), and return a boolean values based on the checking result
     boolean checkIfTableIsEmpty(String tableName) {
         boolean checkingResult = false;
@@ -275,10 +260,13 @@ public class DBHandler {
         }
         return checkingResult;
     }
+    //***************************************************************************************************************************************************************
     
-    //Populate the tables TERMS with default values
+    //***************************************************************************************************************************************************************
+    //Function that populates the tables TERMS and CALENDARS with default values
     void insertDefaultValuesIntoTables() {
         
+        // Inserting default values in the TERMS table
         String TableName = "TERMS";
         try {
             stmt = conn.createStatement();
@@ -315,7 +303,8 @@ public class DBHandler {
         }
         
         
-        // The following lines are for testing purposes. They will be deleted later
+        // Inserting default values in the CALENDARS table. Creating a test calendar from the start
+        // This test calendar can be deleted by the user.
         TableName = "CALENDARS";
         try {
             stmt = conn.createStatement();
@@ -328,15 +317,6 @@ public class DBHandler {
                 boolean dataExistsInTable = checkIfTableIsEmpty(TableName);
                 if (!dataExistsInTable)
                 {
-                    /*
-                    int id = 1;
-                    for(int i=0; i < terms.length; i++)
-                    {
-                        String query2 = "INSERT INTO " + TableName + " VALUES(" + id + ", '" + terms[i]+ "', '" + defaultColor +"')";
-                        stmt.execute(query2);
-                        id++;
-                    }
-                    */
                     String query2 = "INSERT INTO " + TableName + " VALUES('Test Name', 2017, 2018, '2017-08-01')";
                     stmt.execute(query2);
                     System.out.println("Default values SUCCESSFULLY inserted Table " + TableName + "!!!");
@@ -356,12 +336,14 @@ public class DBHandler {
         }
            
     }
+    //***************************************************************************************************************************************************************
     
-    
+    //***************************************************************************************************************************************************************
     // This function is for testing purposes. Helps the programmer see all the terms in the TERMS Table and all the Rules in the RULES table
     void printAllDefaultRecords(){
         try {
             
+            // Print default records from TERMS table
             stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery("SELECT * FROM TERMS");
             System.out.println("----------------------------------------");
@@ -371,26 +353,23 @@ public class DBHandler {
                 System.out.println(res.getString("TermID") + " - " + res.getString("TermName") + ", color: " + res.getString("TermColor"));
             }
             
-            
+            // Print default records from RULES table
             System.out.println("----------------------------------------");
             System.out.println("----------------------------------------");
             System.out.println("Table RULES default records:");
             res = stmt.executeQuery("SELECT * FROM RULES");
             while (res.next()){
                 System.out.println("Record has values: " +res.getString("EventDescription") + " - " + res.getString("TermID") + " - " + res.getString("DaysFromStart"));
-            }
-            
+            }  
         }
         catch (SQLException e) {
             System.err.println(e.getMessage() + "--- Error when printing");
         } finally {
         }
     }
+    //***************************************************************************************************************************************************************
     
-    
-    
-    
-    
+    //*****************************************************************************************************************************
     //Function that executes a SELECT query and returns the requested values/data from the database
     public ResultSet executeQuery(String query) {
         ResultSet result;
@@ -408,8 +387,9 @@ public class DBHandler {
         
         return result;
     }
+    //*****************************************************************************************************************************
     
-    
+    //*****************************************************************************************************************************
     //Function that executes an insertion, deletion, or update query
     public boolean executeAction(String query2) {
         try {
@@ -425,21 +405,12 @@ public class DBHandler {
         finally {
         }
     }
+    //*****************************************************************************************************************************
     
-    
-    
-    
-    
+    //*****************************************************************************************************************************
     //Function that return the complete list of terms that exist in the database
     public ObservableList<String> getListOfTerms() throws SQLException {
         
-        
-        System.out.println("************************************************");
-        System.out.println("************************************************");
-        System.out.println("************************************************");
-        System.out.println("");
-        System.out.println("Priinting the observableArrayList of term");
-        System.out.println("");
         //ArrayList that will contain all terms saved in the TERMS Tables
         ObservableList<String> listOfTerms = FXCollections.observableArrayList();// = new ObservableList();
         
@@ -447,7 +418,6 @@ public class DBHandler {
         String queryListOfTerms = "SELECT TermName FROM TERMS";
         //Variable that will hold the result of executing the previous query
         ResultSet rs = executeQuery(queryListOfTerms);
-        
         
         try
         {
@@ -465,28 +435,11 @@ public class DBHandler {
             System.err.println(e.getMessage() + "--- error at getListOfTerms method in DBHandler class");
         }
         
-        //********************************************************************************************************
-        //*******  These lines of code are to Test we get all terms correctly from databse table TERMS  **********
-        
-        //Print full array with all Term Names for testing that we get the list we need
-        System.out.println("Observable list of terms is the following:  " + listOfTerms);
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        int arrayListSize = listOfTerms.size();
-        int idTerm = 1;
-        for (int i=0; i < arrayListSize; i++)
-        {
-            System.out.println("ID: " + idTerm + " --- " + listOfTerms.get(i));
-            idTerm++;
-        }
-        //*******************************************************************************************************
-        //*******************************************************************************************************
-        
         return listOfTerms;
     }
+    //*****************************************************************************************************************************
     
-    
-            
+    //*****************************************************************************************************************************        
     //Function that returns the Term ID based on a given term name        
     public int getTermID(String termName) {
         
@@ -506,17 +459,12 @@ public class DBHandler {
             System.err.println(e.getMessage() + "--- error at getTermID method in DBHandler class");
         } 
         
-        //test function for correct result
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("Term ID for " + termName + " is: " + termID);
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        
         return termID;
     }
+    //*****************************************************************************************************************************
     
-    
+    //*****************************************************************************************************************************
+    // Function that returns a term's name based on a given term ID
     public String getTermName(int termIDAux) {
         
         //Declare variable that will contain the name of the term
@@ -525,11 +473,11 @@ public class DBHandler {
         String getTermNameQuery = "SELECT TermName FROM TERMS "
                                 + "WHERE TERMS.TermID=" + termIDAux;
         
-        System.out.println("Query to get TermName is: " + getTermNameQuery);
-        
-        
+        //Execute query to get the name of the term based on the given term ID
         ResultSet res = executeQuery(getTermNameQuery);
         
+        // get the name of the term and store it in the String variable nameOfTerm
+        // if the query obtained a result for the given term ID
         try
         {
             while(res.next())
@@ -542,31 +490,25 @@ public class DBHandler {
             System.err.println(e.getMessage() + "--- error at getTermID method in DBHandler class");
         } 
         
-        //test function for correct result
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("Term Name for " + termIDAux + " is: " + nameOfTerm);
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        
-        
-        
         return nameOfTerm;
     }
+    //*****************************************************************************************************************************
     
+    //*****************************************************************************************************************************
+    // Function that returns the starting date of term based on a given term ID
     public String getTermStartDate(int auxTermID){
         
+        //Declare and initialize String variable that will hold the start date of a term to be returned 
         String termStartDate = defaultTermStartDate;
         
+        //Query that will look for the start date of the term specified by the given term ID
         String getTermDateQuery = "SELECT TermStartDate FROM TERMS "
                             + "WHERE TERMS.TermID=" + auxTermID;
         
-        System.out.println("*********************************************************");
-        System.out.println("Query to get term start date is: " + getTermDateQuery);
-        System.out.println("*********************************************************");
-        
+        // Execute query to get the term's starting date
         ResultSet res = executeQuery(getTermDateQuery);
         
+        // Store the term's starting date in the String variable if the query obtained a result
         try
         {
             while(res.next())
@@ -579,26 +521,22 @@ public class DBHandler {
             System.err.println(e.getMessage() + "--- error at getTermID method in DBHandler class");
         } 
         
-        
-        System.out.println("*********************************************************");
-        System.out.println("The start date of the Term (" + auxTermID + ") is:  " + termStartDate);
-        System.out.println("*********************************************************");
-        
-        
         return termStartDate;
     }
+    //*****************************************************************************************************************************
     
+    //*****************************************************************************************************************************
+    // Function that returns the list of all rules in the RULES table (all existing records). Takes no arguments
     public ArrayList<String> getListOfRules() {
         
-        //Object that will hold all the rows of rules to be returned
+        //ArrayList Object that will hold all the rows (records) of rules to be returned
         ArrayList<String> listOfRules = new ArrayList<>();
         
-        //Query that select all rows of rules from the RULES table
+        //Query that select all rows (records) of rules from the RULES table
         String queryListOfRules = "SELECT * FROM RULES";
         
         //Variable that will hold the result of executing the previous query
         ResultSet rs = executeQuery(queryListOfRules);
-        
         
         try
         {
@@ -606,7 +544,7 @@ public class DBHandler {
            while(rs.next()) 
             {
                 //get the full row of the rule and store it in a String variable
-                String ruleDataRow = rs.getString("EventDescription") + "/" + rs.getInt("TermID") + "/" + rs.getString("DaysFromStart");
+                String ruleDataRow = rs.getString("EventDescription") + "~" + rs.getInt("TermID") + "~" + rs.getString("DaysFromStart");
                 //add rule to list of rules
                 listOfRules.add(ruleDataRow);
             } 
@@ -616,26 +554,12 @@ public class DBHandler {
             System.err.println(e.getMessage() + "--- error at getListOfRules method in DBHandler class");
         }
         
-        //********************************************************************************************************
-        //*******  These lines of code are to Test we get all rules correctly from databse table TERMS  **********
-        
-        //Print full array with all Term Names for testing that we get the list we need
-        System.out.println("Array list of rules is the following:  ");//+ listOfRules);
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        int arrayListSize = listOfRules.size();
-        
-        for (int i=0; i < arrayListSize; i++)
-        {
-            System.out.println("Rule: " + listOfRules.get(i));
-        }
-        //*******************************************************************************************************
-        //*******************************************************************************************************
-        
         return listOfRules; 
     }
+    //*****************************************************************************************************************************
     
-    
+    //*****************************************************************************************************************************
+    // Function that returns the color for a term based on a given term ID
     public String getTermColor(int auxTermID) {
         
         //Declare variable that will contain the color of the term to be returned
@@ -645,11 +569,10 @@ public class DBHandler {
         String getTermColorQuery = "SELECT TermColor FROM TERMS "
                                 + "WHERE TERMS.TermID=" + auxTermID;
         
-        //System.out.println("Query to get TermName is: " + getTermColorQuery);
-        
-        
+        //Execute query to get the color of a term based a given term ID
         ResultSet res = executeQuery(getTermColorQuery);
         
+        // store color in a String variable of the query obtained a result
         try
         {
             while(res.next())
@@ -662,33 +585,28 @@ public class DBHandler {
             System.err.println(e.getMessage() + "--- error at getTermColor method in DBHandler class");
         } 
         
-        //test function for correct result
-        /*
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("Term Color for " + auxTermID + " is: " + termColor);
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        */
-        
-        
         return termColor;
     }
+    //*****************************************************************************************************************************
     
-    public void setTermColor(String term, String termRGB){
+    //*****************************************************************************************************************************
+    // Function that sets (updates) the color of a term. Takes as arguments: the new color and the term ending (e.g. SEM, QTR, etc.)
+    public void setTermColor(String termIdentifier, String termRGB){
      
+        //Query that will update the color of the terms that end with the term ending specified by variable "termIdentifier"
         String setTermColorAction = "UPDATE TERMS "
                         + "SET TermColor ='" + termRGB + "' "
                         + "WHERE TERMS.TermName LIKE " 
-                        + "'%" + term + "%'";
+                        + "'%" + termIdentifier + "%'";
         
-        //System.out.println("Query to get related terms is: " + setTermColorAction);
-        
+        //Execute query to update the color for the speficied terms
         executeAction(setTermColorAction);
     
     }
+    //*****************************************************************************************************************************
     
-    
+    //*****************************************************************************************************************************
+    // Function that returns a list of Term IDs based on a list of term endings (identifiers)
     public ArrayList<String> getListOfTermIDs(ArrayList<String> auxTermIdentifiersList) {
         
         //Object that will hold all the list of Term IDs to be returned
@@ -702,11 +620,8 @@ public class DBHandler {
             String TermIDsQuery = "SELECT TermID FROM TERMS "
                                 + "WHERE TermName LIKE '%" + auxTermIdentifiersList.get(i) + "%'";
         
-            System.out.println("Term IDs list query is: " + TermIDsQuery);
-        
             //Variable that will hold the result of executing the previous query
             ResultSet rs = executeQuery(TermIDsQuery);
-        
         
             try
             {
@@ -722,31 +637,17 @@ public class DBHandler {
             catch (SQLException e) 
             {
                 System.err.println(e.getMessage() + "--- error at getListOfTermIDs method in DBHandler class");
-            }
-        
-            //********************************************************************************************************
-            //*******  These lines of code are to Test we get all rules correctly from databse table TERMS  **********
-        
-            //Print full array with all Term Names for testing that we get the list we need
-            System.out.println("Array list of rules is the following:  ");//+ listOfRules);
-            System.out.println("-----------------------------------------------------");
-            System.out.println("-----------------------------------------------------");
-            int arrayListSize = listOfTermIDs.size();
-        
-            for (int j=0; j < arrayListSize; j++)
-            {
-                System.out.println("Term ID: " + listOfTermIDs.get(j));
-            }
-            //*******************************************************************************************************
-            //*******************************************************************************************************
-            
+            }  
         }
         
         return listOfTermIDs;
     }
+    //*****************************************************************************************************************************
     
+    //*****************************************************************************************************************************
+    // Function that returns list of filtered events to be shown in the calendar
+    // this function takes as arguments: the list of term identiftiers and the current calendar
     public ArrayList<String> getFilteredEvents(ArrayList<String> auxTermIdentifiersList, String calName){
-        
         
         //Declare and instantiate ArrayList object that will hold all events for the requested term(s)
         ArrayList<String> filteredEventsList = new ArrayList();
@@ -754,19 +655,18 @@ public class DBHandler {
         //has to call getListOfTermIDs first to know which events to get from EVENTS table
         ArrayList<String> listOfTermIDs = this.getListOfTermIDs(auxTermIdentifiersList);
         
+        //Continue to get the events if the list of term IDs is not empty, i.e., if the user selected at least one filter/term
         if (!listOfTermIDs.isEmpty())
         {
             for(int i=0; i < listOfTermIDs.size(); i++)
             {
+                //Query that will select all events that match the term ID and the calendar the user is working on
                 String getEventsQuery = "SELECT * FROM EVENTS "
                                         + "WHERE EVENTS.TermID=" + listOfTermIDs.get(i)
                                         + " AND EVENTS.CalendarName='" + calName + "'";
                 
-                System.out.println("query to get filtered events is: " + getEventsQuery);
-                
                 //Variable that will hold the result of executing the previous query
                 ResultSet rs = executeQuery(getEventsQuery);
-        
         
                 try
                 {
@@ -774,13 +674,12 @@ public class DBHandler {
                     while(rs.next()) 
                     {
                         //get the full row of the event info and store it in a String variable
-                        String filteredEvent = rs.getString("EventDescription") + "/"
-                                            + rs.getString("EventDate") + "/"
-                                            + rs.getInt("TermID") + "/" 
+                        String filteredEvent = rs.getString("EventDescription") + "~"
+                                            + rs.getString("EventDate") + "~"
+                                            + rs.getInt("TermID") + "~" 
                                             + rs.getString("CalendarName");
                         //add event to list of filtered events
                         filteredEventsList.add(filteredEvent);
-                        System.out.println("filtered event is: " + filteredEvent);
                     } 
                 }
                 catch (SQLException e) 
@@ -790,15 +689,7 @@ public class DBHandler {
             }
         }
         
-        System.out.println("****************************************************");
-        System.out.println("Full list of filtered events is: ");
-        System.out.println(filteredEventsList);
-        System.out.println("****************************************************");
-        
-        
         return filteredEventsList;
-        //Query to get events that belong to terms in the ID list
-        
-    }
+    } //end of getFilteredEvents function
     
-}
+} // end of public class DBHandler

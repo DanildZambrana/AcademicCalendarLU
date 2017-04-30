@@ -1,8 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
+
+//Packages and Imports
 package academiccalendar.data.model;
 
 /**
@@ -42,6 +40,7 @@ public class Model {
     public String term_name;
     public String term_date;    
     
+    //Function that returns a month Index based on the given month name
     public int getMonthIndex(String month){
         switch (month)
         {    
