@@ -84,8 +84,6 @@ public class ListCalendarsController implements Initializable {
 
                 String startingDate = result.getString("StartDate");
                 
-                System.out.println(startYear);
-                
                 list.add(new academiccalendar.ui.main.Calendar(calendarName, startYear, endYear, startingDate));
 
                
