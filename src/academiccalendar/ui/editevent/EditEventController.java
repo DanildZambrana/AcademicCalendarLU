@@ -1,4 +1,6 @@
 
+//Packages and Imports
+
 package academiccalendar.ui.editevent;
 
 import academiccalendar.data.model.Model;
@@ -55,6 +57,7 @@ public class EditEventController implements Initializable {
     @FXML
     private AnchorPane rootPane;
     
+    //Set main controller
     public void setMainController(FXMLDocumentController mainController) {
         this.mainController = mainController ;
     }
@@ -63,21 +66,23 @@ public class EditEventController implements Initializable {
     private double xOffset;
     private double yOffset;
     
+    
+    //Function that fills the date picker based on the clicked event's date
     void autofillDatePicker() {
-       // Get selected day, month, and year and autofill date selection
-       int day = Model.getInstance().event_day;
-       int month = Model.getInstance().event_month + 1;
-       int year = Model.getInstance().event_year;
-       int termID = Model.getInstance().event_term_id;
-       String descript = Model.getInstance().event_subject;
+        
+        // Get selected day, month, and year and autofill date selection
+        int day = Model.getInstance().event_day;
+        int month = Model.getInstance().event_month + 1;
+        int year = Model.getInstance().event_year;
+        int termID = Model.getInstance().event_term_id;
+        String descript = Model.getInstance().event_subject;
        
         //Query to get ID for the selected Term
         String getIDQuery = "SELECT TermName From TERMS "
                 + "WHERE TERMS.TermID= " + termID + " ";
         
+        //Varialbe that holds the name of the current event's term based on a given term ID
         String chosenTermName = "";
-        
-        //System.out.println(getIDQuery);
 
         //Store the results from executing the Query
         ResultSet result = databaseHandler.executeQuery(getIDQuery);
@@ -86,7 +91,6 @@ public class EditEventController implements Initializable {
              while(result.next()){
                  //store ID into the corresponding variable
                  chosenTermName = result.getString("TermName");
-                 System.out.println("THe termName of event to edit is: " + chosenTermName);
              }
         } catch (SQLException ex) {
              Logger.getLogger(AddEventController.class.getName()).log(Level.SEVERE, null, ex);
@@ -98,6 +102,7 @@ public class EditEventController implements Initializable {
        // Fill description field
        subject.setText(descript);
        
+       //Fill term drop-down menu with current event's term
        termSelect.getSelectionModel().select(chosenTermName);
     }
     
@@ -113,7 +118,7 @@ public class EditEventController implements Initializable {
         databaseHandler = new DBHandler();
         //****************************************************
         
-        
+        //Fill the date picker
         autofillDatePicker();
         
         //Get the list of exisitng terms from the database and show them in the correspondent drop-down menu
@@ -181,6 +186,7 @@ public class EditEventController implements Initializable {
         updateEvent();
     }
 
+    //Function that deletes a selected event
     @FXML
     private void delete(MouseEvent event) {
         
@@ -212,8 +218,7 @@ public class EditEventController implements Initializable {
     }
     
     
-    
-    
+    //Function that updates the information of a selected event from the calendar
     public void updateEvent(){
         
         // Define date format
@@ -230,7 +235,7 @@ public class EditEventController implements Initializable {
         String eventDate = year + "-" + month + "-" + day;
         int termID = Model.getInstance().event_term_id;
         String descript = Model.getInstance().event_subject;
-        String calName = Model.getInstance().calendar_name;
+        String calName = Model.getInstance().calendar_name; 
         
         //Get the original date of the event to be updated in the format yyyy-mm-dd
         SimpleDateFormat auxDateFormat = new SimpleDateFormat("yyyy-mm-dd");
@@ -241,10 +246,7 @@ public class EditEventController implements Initializable {
             auxDate = auxDateFormat.format(auxEventDate);
         } catch (ParseException ex) {
             Logger.getLogger(EditEventController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        System.out.println(eventDate + " - " + termID + " - " + descript + " - " + calName);
-        
+        }    
         
         //**********************************************************************
         //******    Get NEW INFO for the Event to be edited/updated   **********
@@ -257,8 +259,18 @@ public class EditEventController implements Initializable {
         // Get term that was selected by the user
         String term = termSelect.getValue();
         
-        System.out.println("will be update to: ");
-        System.out.println("" + newEventSubject + " - " + term + " - " + newCalendarDate + " - " + calName);
+        
+        //Check if the event descritption contains the character ~ because it cannot contain it due to database and filtering issues
+        if (newEventSubject.contains("~"))
+        {
+            //Show message indicating that the event description cannot contain the character ~
+            Alert alertMessage = new Alert(Alert.AlertType.WARNING);
+            alertMessage.setHeaderText(null);
+            alertMessage.setContentText("Event Description cannot contain the character ~");
+            alertMessage.showAndWait();
+            return;
+        }
+        
         
         //Get the ID of the new term selected by the user when editing the event's information
         int newTerm = databaseHandler.getTermID(term);
@@ -274,10 +286,6 @@ public class EditEventController implements Initializable {
                                 + "EVENTS.EventDate='" + auxDate + "' AND "
                                 + "EVENTS.TermID=" + termID + " AND "
                                 + "EVENTS.CalendarName='" + calName + "' ";
-        
-        System.out.println("************************************************");
-        System.out.println("query is: " + updateEventQuery);
-        System.out.println("************************************************");
         
         
         //Execute query in otder to update the info for the selected event
@@ -342,11 +350,6 @@ public class EditEventController implements Initializable {
                                 + "EVENTS.TermID=" + termID + " AND "
                                 + "EVENTS.CalendarName='" + calName + "' ";
         
-        System.out.println("************************************************");
-        System.out.println("query is: " + deleteEventQuery);
-        System.out.println("************************************************");
-        
-        
         //Execute query that deletes the selected event
         boolean eventWasDeleted = databaseHandler.executeAction(deleteEventQuery);
         
@@ -376,4 +379,4 @@ public class EditEventController implements Initializable {
         
     }
     
-}
+}// end of EditEventController class
