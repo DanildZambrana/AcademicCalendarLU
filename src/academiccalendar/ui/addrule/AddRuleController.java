@@ -1,4 +1,6 @@
 
+//Packages and imports
+
 package academiccalendar.ui.addrule;
 
 import academiccalendar.database.DBHandler;
@@ -10,6 +12,7 @@ import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.ObservableList;
@@ -37,6 +40,7 @@ public class AddRuleController implements Initializable {
      // Controllers -------------------------------------------------------
     private FXMLDocumentController mainController ;
     
+    //Set main controller
     public void setMainController(FXMLDocumentController mainController) {
         this.mainController = mainController ;
     }
@@ -118,19 +122,44 @@ public class AddRuleController implements Initializable {
 
     @FXML
     private void exit(MouseEvent event) {
+        //Close the window
         Stage stage = (Stage) rootPane.getScene().getWindow();
         stage.close();
     }
 
+    //Function that will get the rule's information and store it in the database
     @FXML
     private void save(MouseEvent event) {
         
-         
+        //Check if user filled out all fields
         if(eventDescript.getText().isEmpty()||termSelect.getSelectionModel().isEmpty()
                 ||daysFromStart.getText().isEmpty()){
             Alert alertMessage = new Alert(Alert.AlertType.ERROR);
             alertMessage.setHeaderText(null);
             alertMessage.setContentText("Please fill out all fields");
+            alertMessage.showAndWait();
+            return;
+        }
+        
+        //Check if the event descritption contains the character ~ because it cannot contain it due to database and filtering issues
+        if (eventDescript.getText().contains("~"))
+        {
+            //Show message indicating that the rule description cannot contain the character ~
+            Alert alertMessage = new Alert(Alert.AlertType.WARNING);
+            alertMessage.setHeaderText(null);
+            alertMessage.setContentText("Rule Description cannot contain the character ~");
+            alertMessage.showAndWait();
+            return;
+        }
+        
+        //Check if Days From Start is an integer number using the Scanner class
+        Scanner auxScanner = new Scanner(daysFromStart.getText());
+        if (!auxScanner.hasNextInt())
+        {
+            //Show message indicating that the days from start should be an integer number
+            Alert alertMessage = new Alert(Alert.AlertType.WARNING);
+            alertMessage.setHeaderText(null);
+            alertMessage.setContentText("Days From Start should be an integer number");
             alertMessage.showAndWait();
             return;
         }
@@ -153,12 +182,13 @@ public class AddRuleController implements Initializable {
 
     @FXML
     private void cancel(MouseEvent event) {
+        //Close window
         Stage stage = (Stage) rootPane.getScene().getWindow();
         stage.close();
     }
     
 
-    
+    //Function that sends the query to the database for inserting the rule into the RULES table
     public void saveRuleInDatabase(String eventDescription, String termName, int daysFromStart)
     {
         //Get term ID for the term selected because it is needed to save the rule in the RULES table due int attribute called TermID
@@ -170,9 +200,6 @@ public class AddRuleController implements Initializable {
                             + termID + ", "
                             + daysFromStart
                             + ")";
-        
-        //print query to check it is properly written
-        System.out.println(addRuleQuery);
         
         //save rule into the database and show message whether or not it was saved successfully
         if(databaseHandler.executeAction(addRuleQuery)) {
@@ -187,8 +214,7 @@ public class AddRuleController implements Initializable {
             alertMessage.setHeaderText(null);
             alertMessage.setContentText("Adding Rule Failed!");
             alertMessage.showAndWait();
-        }
-        
+        } 
     }
 
-}
+}// end of AddRuleController class

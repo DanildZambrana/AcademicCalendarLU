@@ -1,4 +1,6 @@
 
+//Packages and Imports
+
 package academiccalendar.ui.addcalendar;
 
 import academiccalendar.data.model.Model;
@@ -65,86 +67,85 @@ public class AddCalendarController implements Initializable {
     @FXML
     void generateNewCalendar(MouseEvent event) {
         
-        if ( (date.getValue() != null) && (!calendarName.getText().isEmpty())) {            
+        //Variable that holds the calendar name entered by the user
+        String calName = calendarName.getText();
+        
+        //Check if the user actually gave input for the calendar name and the start date of the calendar
+        if ( (date.getValue() != null) && (!calendarName.getText().isEmpty())) {
             
-            // Set the starting and ending years, and the starting date
-            Model.getInstance().calendar_start_date = "" + date.getValue();
-            System.out.println("*-**--*--*-*-*-*--*-*-*-*-*-*-*-*--*");
-            System.out.println("*-**--*--*-*-*-*--*-*-*-*-*-*-*-*--*");
-            System.out.println("Calendar starting DATE is:  " + Model.getInstance().calendar_start_date);
-            System.out.println("*-**--*--*-*-*-*--*-*-*-*-*-*-*-*--*");
-            System.out.println("*-**--*--*-*-*-*--*-*-*-*-*-*-*-*--*");
-            Model.getInstance().calendar_start = date.getValue().getYear();
-            Model.getInstance().calendar_end = date.getValue().getYear() + 1;
-            Model.getInstance().calendar_name = calendarName.getText();
-            
-            
-            
-            // Define date format
-            DateTimeFormatter myFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            // Get the date value from the date picker
-            String startingDate = date.getValue().format(myFormat);
-            System.out.println("Calendar starting DATE format is now:  " + startingDate);
-            System.out.println("*-**--*--*-*-*-*--*-*-*-*-*-*-*-*--*");
-            System.out.println("*-**--*--*-*-*-*--*-*-*-*-*-*-*-*--*");
-            
-            //String startingDate = Model.getInstance().calendar_start_date;
-            String startingYear = Integer.toString(Model.getInstance().calendar_start);
-            String endingYear = Integer.toString(Model.getInstance().calendar_end);
-            String calName = calendarName.getText();
-            
-            // RODOLFO - This is where you can put the Calendar name, Starting Year, and Ending Year into the Database.
-            // You have the variables above (startingYear, endingYear, calName)
-            // Let me know if you need more/ different fields.
-            
-            //************************************************************************
-            //************************************************************************
-            //
-            //********  Inserting the new calendar data into the database  ***********
-            
-            
-            //*** Instantiate DBHandler object *******************
-            databaseHandler = new DBHandler();
-            //****************************************************
-            
-            // Query that inserts the new calendar into the database
-            String calendarQuery = "INSERT INTO CALENDARS VALUES ("
-                    + "'" + calName + "', " + startingYear + ", " + endingYear + ", " + "'" + startingDate + "')";
-            
-            System.out.println(calendarQuery); //to test the query that will be sent to the database is written correctly 
-            
-            //Insert the new calendar into the database and show a message wheher the insertion was successful or not
-            if(databaseHandler.executeAction(calendarQuery)) 
+            //Check if the calendar name contains the character ~ because it cannot contain it due to database and filtering issues
+            if (calName.contains("~"))
             {
-                Alert alertMessage = new Alert(Alert.AlertType.INFORMATION);
+                //Show message indicating that the calendar cannot contain the character ~
+                Alert alertMessage = new Alert(Alert.AlertType.WARNING);
                 alertMessage.setHeaderText(null);
-                alertMessage.setContentText("Calendar was created successfully");
-                alertMessage.showAndWait();
-                
-                // Load the calendar in the main window
-                mainController.calendarGenerate();
-                
-                //Enable the checkboxes for filtering events, now that the user is actually working on a calendar
-                mainController.enableCheckBoxes();
-                
-                //Enable the buttons that work with rules
-                //mainController.enableButtons();
-            }
-            else //if there is an error
-            {
-                Alert alertMessage = new Alert(Alert.AlertType.ERROR);
-                alertMessage.setHeaderText(null);
-                alertMessage.setContentText("Creating Calendar Failed!");
+                alertMessage.setContentText("Calendar name cannot contain the character ~");
                 alertMessage.showAndWait();
             }
+            else
+            {
+               // Set the starting and ending years, and the starting date, and store them in a Model object
+                Model.getInstance().calendar_start_date = "" + date.getValue();
+                Model.getInstance().calendar_start = date.getValue().getYear();
+                Model.getInstance().calendar_end = date.getValue().getYear() + 1;
+                Model.getInstance().calendar_name = calendarName.getText();
+
+                // Define date format
+                DateTimeFormatter myFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                // Get the date value from the date picker
+                String startingDate = date.getValue().format(myFormat);
+
+                //Store calendar's information in String variables that will be used to build the query to insert it into the database
+                String startingYear = Integer.toString(Model.getInstance().calendar_start);
+                String endingYear = Integer.toString(Model.getInstance().calendar_end);
+                String calName2 = calendarName.getText();
+
+                //************************************************************************
+                //************************************************************************
+                //
+                //********  Inserting the new calendar data into the database  ***********
+
+                //*** Instantiate DBHandler object *******************
+                databaseHandler = new DBHandler();
+                //****************************************************
+
+                // Query that inserts the new calendar into the database
+                String calendarQuery = "INSERT INTO CALENDARS VALUES ("
+                        + "'" + calName2 + "', " + startingYear + ", " + endingYear + ", " + "'" + startingDate + "')";
+
+                //Insert the new calendar into the database and show a message wheher the insertion was successful or not
+                if(databaseHandler.executeAction(calendarQuery)) 
+                {
+                    Alert alertMessage = new Alert(Alert.AlertType.INFORMATION);
+                    alertMessage.setHeaderText(null);
+                    alertMessage.setContentText("Calendar was created successfully");
+                    alertMessage.showAndWait();
+
+                    // Load the calendar in the main window
+                    mainController.calendarGenerate();
+
+                    //Enable the checkboxes for filtering events, now that the user is actually working on a calendar
+                    mainController.enableCheckBoxes();
+
+                    //Enable the buttons that work with rules
+                    //mainController.enableButtons();
+                }
+                else //if there is an error
+                {
+                    Alert alertMessage = new Alert(Alert.AlertType.ERROR);
+                    alertMessage.setHeaderText(null);
+                    alertMessage.setContentText("Creating Calendar Failed!");
+                    alertMessage.showAndWait();
+                }
+
+                // Close the window
+                Stage stage = (Stage) rootPane.getScene().getWindow();
+                stage.close(); 
+            }
             
-            // Close the window
-            Stage stage = (Stage) rootPane.getScene().getWindow();
-            stage.close();
         }
-        else {
-            System.out.println("Error: user did not fill out all fields");
-            
+        else 
+        {
             Alert alert = new Alert(AlertType.WARNING, "Please fill out all fields.");
             alert.showAndWait();
         }        
@@ -200,12 +201,14 @@ public class AddCalendarController implements Initializable {
 
     @FXML
     private void exit(MouseEvent event) {
+        //Close the window
         Stage stage = (Stage) rootPane.getScene().getWindow();
         stage.close();
     }
 
     @FXML
     private void cancel(MouseEvent event) {
+        //Close the window
         Stage stage = (Stage) rootPane.getScene().getWindow();
         stage.close();
     }
