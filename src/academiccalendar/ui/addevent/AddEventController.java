@@ -1,4 +1,6 @@
 
+//Packages and Imports
+
 package academiccalendar.ui.addevent;
 
 import academiccalendar.data.model.Model;
@@ -39,7 +41,7 @@ public class AddEventController implements Initializable {
     //--------------------------------------------------------------------
     
     
-
+    //Set main controller
     public void setMainController(FXMLDocumentController mainController) {
         this.mainController = mainController ;
     }
@@ -85,6 +87,7 @@ public class AddEventController implements Initializable {
         stage.close();
     }
     
+    //Function that inserts a new event in the database
      @FXML
     void save(MouseEvent event) {
         
@@ -94,6 +97,7 @@ public class AddEventController implements Initializable {
         // Define date format
         DateTimeFormatter myFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");        
         
+        //Check if the user inputted information in all required fields!
         if(subject.getText().isEmpty()||termSelect.getSelectionModel().isEmpty()
                 ||date.getValue() == null){
             Alert alertMessage = new Alert(Alert.AlertType.ERROR);
@@ -102,6 +106,19 @@ public class AddEventController implements Initializable {
             alertMessage.showAndWait();
             return;
         }
+        
+        //Check if the event descritption contains the character ~ because it cannot contain it due to database and filtering issues
+        if (subject.getText().contains("~"))
+        {
+            //Show message indicating that the event description cannot contain the character ~
+            Alert alertMessage = new Alert(Alert.AlertType.WARNING);
+            alertMessage.setHeaderText(null);
+            alertMessage.setContentText("Event Description cannot contain the character ~");
+            alertMessage.showAndWait();
+            return;
+        }
+        
+        //If all data is inputted correctly and validated, then add the event:
         
         // Get the date value from the date picker
         String calendarDate = date.getValue().format(myFormat);
@@ -145,9 +162,6 @@ public class AddEventController implements Initializable {
             alertMessage.showAndWait();
         }
         
-        //Show event on the calendar
-        //mainController.showDate(date.getValue().getDayOfMonth(), eventSubject, chosenTermID);
-        
         //Show the new event on the calendar according to the selected filters
         mainController.repaintView();
             
@@ -157,16 +171,7 @@ public class AddEventController implements Initializable {
     }
     
     
-    
-    private void addEventLabel(){
-        
-    }
-    
-    private void saveToDatabase(String calendarDate, String eventSubect, String program, String type, String term) {
-        // Database handler function here
-        // This is where you add it to the database
-    }
-    
+    //Function that fills the date picker based on the clicked date 
     void autofillDatePicker() {
        // Get selected day, month, and year and autofill date selection
        int day = Model.getInstance().event_day;
@@ -189,7 +194,7 @@ public class AddEventController implements Initializable {
         //****************************************************
         
         
-        
+        //Fill the date picker
         autofillDatePicker();
         
         //Get the list of exisitng terms from the database and show them in the correspondent drop-down menu
@@ -202,8 +207,6 @@ public class AddEventController implements Initializable {
              Logger.getLogger(AddEventController.class.getName()).log(Level.SEVERE, null, ex);
          }
    
-        
-        
         //**********************************************************************
         // ************* Everything below is for Draggable Window ********
         
