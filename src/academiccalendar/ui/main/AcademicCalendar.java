@@ -25,6 +25,7 @@ public class AcademicCalendar extends Application {
         // Set main window icon
         stage.getIcons().add(
         new Image( "academiccalendar/ui/icons/app_icon.png" ));
+        stage.setTitle("LUAC (Lindewood Academic Calendar) by Frumbug Software");
         
         // Maximize window at launch
         stage.setMaximized(true);
