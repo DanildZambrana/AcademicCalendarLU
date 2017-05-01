@@ -1,4 +1,6 @@
 
+//Packages and Imports
+
 package academiccalendar.ui.editrule;
 
 import academiccalendar.data.model.Model;
@@ -13,6 +15,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.ObservableList;
@@ -35,6 +38,7 @@ public class EditRuleController implements Initializable {
     // Main Controller -------------------------------
     private FXMLDocumentController mainController;
     
+    //Set main controller
     public void setMainController(FXMLDocumentController mainController) {
         this.mainController = mainController ;
     }
@@ -67,6 +71,7 @@ public class EditRuleController implements Initializable {
     private double xOffset;
     private double yOffset;
     
+    //Auto fill the edit window with the rule's current information
     private void autofill(){
         
         // Retrive rule data
@@ -98,7 +103,7 @@ public class EditRuleController implements Initializable {
             Logger.getLogger(EditEventController.class.getName()).log(Level.SEVERE, null, ex);
         }   
         
-        // Auto fill values for rule fields
+        //Auto fill the edit window with the rule's current information
         autofill();
         
         // ************* Everything below is for Draggable Window ********
@@ -144,10 +149,12 @@ public class EditRuleController implements Initializable {
 
     @FXML
     private void exit(MouseEvent event) {
+        //Close the window
         Stage stage = (Stage) rootPane.getScene().getWindow();
         stage.close();
     }
 
+    //update the selected rule
     @FXML
     private void save(MouseEvent event) {
         updateRule();
@@ -155,6 +162,7 @@ public class EditRuleController implements Initializable {
 
     @FXML
     private void cancel(MouseEvent event) {
+        //Close the window
         Stage stage = (Stage) rootPane.getScene().getWindow();
         stage.close();
     }
@@ -168,7 +176,7 @@ public class EditRuleController implements Initializable {
         //*******   Get OLD INFO of the Rule to be edited/upated which    ******
         //*******   is the term, description, and days from term.         ******
         //**********************************************************************
-        
+         
         String term = Model.getInstance().rule_term;
         String descript = Model.getInstance().rule_descript;
         int days = Model.getInstance().rule_days;
@@ -179,7 +187,31 @@ public class EditRuleController implements Initializable {
         //**********************************************************************
         //******    Get NEW INFO for the Rule to be edited/updated    **********
         //**********************************************************************
+               
+        //Check if the event descritption contains the character ~ because it cannot contain it due to database and filtering issues
+        if (eventDescript.getText().contains("~"))
+        {
+            //Show message indicating that the rule description cannot contain the character ~
+            Alert alertMessage = new Alert(Alert.AlertType.WARNING);
+            alertMessage.setHeaderText(null);
+            alertMessage.setContentText("Rule Description cannot contain the character ~");
+            alertMessage.showAndWait();
+            return;
+        }
         
+        //Check if Days From Start is an integer number using the Scanner class
+        Scanner auxScanner = new Scanner(daysFromStart.getText());
+        if (!auxScanner.hasNextInt())
+        {
+            //Show message indicating that the days from start should be an integer number
+            Alert alertMessage = new Alert(Alert.AlertType.WARNING);
+            alertMessage.setHeaderText(null);
+            alertMessage.setContentText("Days From Start should be an integer number");
+            alertMessage.showAndWait();
+            return;
+        }
+        
+        //Get new info for the rule to be updated
         String newTerm = termSelect.getValue();
         String newDescript = eventDescript.getText();
         int newDays = Integer.parseInt(daysFromStart.getText());
@@ -198,10 +230,6 @@ public class EditRuleController implements Initializable {
                                 + "RULES.DaysFromStart=" + days + " AND "
                                 + "RULES.TermID=" + termID;
         
-        System.out.println("************************************************");
-        System.out.println("query is: " + updateRuleQuery);
-        System.out.println("************************************************");
-        
         
         //Execute query in order to update the info for the selected event
         //and
@@ -211,7 +239,8 @@ public class EditRuleController implements Initializable {
             alertMessage.setHeaderText(null);
             alertMessage.setContentText("Rule was updated successfully");
             alertMessage.showAndWait();
-
+            
+            //update view of the list of rules
             listController.loadData();
         }
         else //if there is an error
@@ -227,4 +256,4 @@ public class EditRuleController implements Initializable {
         stage.close();
     }
     
-}
+} //end of EditRuleController class
