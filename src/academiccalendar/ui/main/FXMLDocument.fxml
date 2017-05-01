@@ -27,6 +27,14 @@
          <right>
             <VBox prefHeight="800.0" prefWidth="184.0" style="-fx-background-color: ecedf7;" BorderPane.alignment="CENTER">
                <children>
+                  <StackPane prefHeight="31.0" prefWidth="184.0">
+                     <children>
+                        <Label fx:id="calendarNameLbl">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
+                     </children>
+                  </StackPane>
                   <StackPane>
                      <children>
                         <Label fx:id="monthLabel" alignment="CENTER" styleClass="month-label" textAlignment="CENTER">
@@ -36,7 +44,7 @@
                         </Label>
                      </children>
                   </StackPane>
-                  <JFXComboBox fx:id="selectedYear" focusColor="#333333" prefHeight="50.0" prefWidth="165.0" promptText="Year" visible="false">
+                  <JFXComboBox fx:id="selectedYear" focusColor="#333333" prefHeight="49.0" prefWidth="198.0" promptText="Year" visible="false">
                      <VBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </VBox.margin>
