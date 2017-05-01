@@ -144,6 +144,16 @@ public class FXMLDocumentController implements Initializable {
     // For export date sorting
     @FXML
     private JFXToggleButton dateToggle;
+    @FXML
+    private AnchorPane rootPane;
+    @FXML
+    private VBox colorRootPane;
+    @FXML
+    private VBox toolsRootPane;
+    @FXML
+    private VBox centerArea;
+    @FXML
+    private Label calendarNameLbl;
     
     //**************************************************************************
     //**************************************************************************
@@ -453,6 +463,9 @@ public class FXMLDocumentController implements Initializable {
         
         // Enable year selection box
         selectedYear.setVisible(true);
+        
+        // Set calendar name label
+        calendarNameLbl.setText(Model.getInstance().calendar_name);
         
         // Get a list of all the months (1-12) in a year
         DateFormatSymbols dateFormat = new DateFormatSymbols();
