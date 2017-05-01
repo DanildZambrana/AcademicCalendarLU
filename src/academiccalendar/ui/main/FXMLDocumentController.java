@@ -636,7 +636,7 @@ public class FXMLDocumentController implements Initializable {
         String calendarName = Model.getInstance().calendar_name;
         
         // Query to get ALL Events from the selected calendar!!
-        String getMonthEventsQuery = "SELECT * From EVENTS WHERE CalendarName='" + calendarName + "'";   
+        String getMonthEventsQuery = "SELECT * From EVENTS WHERE CalendarName='" + calendarName + "' ORDER BY EventDate";   
         
         // Store the results here
         ResultSet result = databaseHandler.executeQuery(getMonthEventsQuery);
@@ -657,7 +657,7 @@ public class FXMLDocumentController implements Initializable {
                  
                 //Get Event Date and format it as day-month-year
                  Date dDate=result.getDate("EventDate");
-                 DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                 DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
                  String eventDate = df.format(dDate);
                  
                  //Query that will get the term name based on a term ID
@@ -736,7 +736,7 @@ public class FXMLDocumentController implements Initializable {
         cell.setCellValue("Date");
         
         // Query to get ALL Events from the selected calendar!!
-        String getMonthEventsQuery = "SELECT * From EVENTS WHERE CalendarName='" + calendarName + "'";   
+        String getMonthEventsQuery = "SELECT * From EVENTS WHERE CalendarName='" + calendarName + "' ORDER BY EventDate ";   
         
         // Store the results here
         ResultSet result = databaseHandler.executeQuery(getMonthEventsQuery);
@@ -758,7 +758,7 @@ public class FXMLDocumentController implements Initializable {
                  
                 //Get Event Date and format it as day-month-year
                  Date dDate=result.getDate("EventDate");
-                 DateFormat df = new SimpleDateFormat("dd MMMM yyyy");
+                 DateFormat df = new SimpleDateFormat("M/dd/yyyy");
                  String eventDate = df.format(dDate);
                  
                  //Query that will get the term name based on a term ID
