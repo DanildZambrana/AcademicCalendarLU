@@ -135,7 +135,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private JFXCheckBox allHolidayCheckBox;
     @FXML
-    private JFXCheckBox allTraTrbCheckBox;    
+    private JFXCheckBox allTraTrbCheckBox;  
+    @FXML
+    private JFXCheckBox selectAllCheckBox; 
     
     // Other global variables for the class
     public static boolean workingOnCalendar = false;
@@ -1134,6 +1136,7 @@ public class FXMLDocumentController implements Initializable {
         allHolidayCheckBox.setDisable(true);
         fallSemCheckBox.setDisable(true);
         allTraTrbCheckBox.setDisable(true);
+        selectAllCheckBox.setDisable(true);
     }
     
     public void enableCheckBoxes(){
@@ -1149,6 +1152,9 @@ public class FXMLDocumentController implements Initializable {
         allHolidayCheckBox.setDisable(false);
         fallSemCheckBox.setDisable(false);
         allTraTrbCheckBox.setDisable(false);
+        selectAllCheckBox.setDisable(false);
+        //Set selection for select all check box to true
+        selectAllCheckBox.setSelected(true);
     }
     
     public void selectCheckBoxes(){
@@ -1166,9 +1172,41 @@ public class FXMLDocumentController implements Initializable {
         allTraTrbCheckBox.setSelected(true);
     }
     
+    public void unSelectCheckBoxes(){
+        
+        //Set ALL check boxes for filtering events to be selected
+        fallSemCheckBox.setSelected(false);
+        springSemCheckBox.setSelected(false);
+        summerSemCheckBox.setSelected(false);
+        allQtrCheckBox.setSelected(false);
+        allMbaCheckBox.setSelected(false);
+        allHalfCheckBox.setSelected(false);
+        allCampusCheckBox.setSelected(false);
+        allHolidayCheckBox.setSelected(false);
+        fallSemCheckBox.setSelected(false);
+        allTraTrbCheckBox.setSelected(false);
+    }
+    
     //******************************************************************************************
     //******************************************************************************************
     //******************************************************************************************
+    
+    
+    @FXML
+    private void selectAllCheckBoxes(ActionEvent e)
+    {
+        if (selectAllCheckBox.isSelected())
+        {
+            selectCheckBoxes();
+        }
+        else
+        {
+            unSelectCheckBoxes();
+        }
+        
+        handleCheckBoxAction(new ActionEvent());
+    }
+    
     
     
     //This function is constantly checking if any of the checkboxes is selected or deselected
