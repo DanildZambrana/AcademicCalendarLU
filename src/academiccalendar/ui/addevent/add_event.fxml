@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" prefHeight="249.0" prefWidth="340.0" stylesheets="@../style/materialButtonStyle.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="academiccalendar.ui.addevent.AddEventController">
+<AnchorPane fx:id="rootPane" prefHeight="249.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="academiccalendar.ui.addevent.AddEventController">
    <children>
-      <HBox id="header" fx:id="header" prefHeight="35.0" prefWidth="340.0">
+      <HBox id="header" fx:id="header" prefHeight="35.0" prefWidth="340.0" stylesheets="@../style/materialButtonStyle.css">
          <children>
             <Label fx:id="topLabel" prefHeight="25.0" prefWidth="313.0" text="Add New Event">
                <font>
@@ -55,7 +55,7 @@
             <HBox prefHeight="100.0" prefWidth="200.0" />
          </children>
       </VBox>
-      <HBox layoutY="181.0" prefHeight="41.0" prefWidth="340.0" AnchorPane.bottomAnchor="0.0">
+      <HBox layoutY="181.0" prefHeight="41.0" prefWidth="340.0" stylesheets="@../style/materialButtonStyle.css" AnchorPane.bottomAnchor="0.0">
          <children>
             <JFXButton fx:id="saveButton" onMouseClicked="#save" prefHeight="40.0" prefWidth="200.0" text="Save">
                <font>

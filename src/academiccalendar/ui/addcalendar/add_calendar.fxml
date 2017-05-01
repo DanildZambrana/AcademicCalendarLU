@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" prefHeight="248.0" prefWidth="340.0" stylesheets="@../style/materialButtonStyle.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="academiccalendar.ui.addcalendar.AddCalendarController">
+<AnchorPane fx:id="rootPane" prefHeight="248.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="academiccalendar.ui.addcalendar.AddCalendarController">
    <children>
-      <HBox id="header" prefHeight="35.0" prefWidth="340.0">
+      <HBox id="header" prefHeight="35.0" prefWidth="340.0" stylesheets="@../style/materialButtonStyle.css">
          <children>
             <Label fx:id="topLabel" prefHeight="30.0" prefWidth="312.0" text=" Create Calendar">
                <font>
@@ -52,7 +52,7 @@
             <JFXDatePicker fx:id="date" promptText="Day Classes Start" />
          </children>
       </VBox>
-      <HBox prefHeight="41.0" prefWidth="340.0" AnchorPane.bottomAnchor="0.0">
+      <HBox prefHeight="41.0" prefWidth="340.0" stylesheets="@../style/materialButtonStyle.css" AnchorPane.bottomAnchor="0.0">
          <children>
             <JFXButton fx:id="generate" onMouseClicked="#generateNewCalendar" prefHeight="40.0" prefWidth="200.0" text="Generate">
                <font>
