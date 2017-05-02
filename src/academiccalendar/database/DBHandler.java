@@ -379,7 +379,7 @@ public class DBHandler {
             result = stmt.executeQuery(query);
         }
         catch (SQLException ex) {
-            System.out.println("Exception at executeQuery:dataHandler" + ex.getLocalizedMessage());
+            System.out.println("Exception at executeQuery:dataHandler --> ERROR: " + ex.getLocalizedMessage());
             return null;
         }
         finally {
@@ -398,8 +398,7 @@ public class DBHandler {
             return true;
         }
         catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error Occured", JOptionPane.ERROR_MESSAGE);
-            System.out.println("Exception at executeQuery:dataHandler" + ex.getLocalizedMessage());
+            System.out.println("Exception at executeQuery:dataHandler  --> ERROR: " + ex.getLocalizedMessage());
             return false;
         }
         finally {
