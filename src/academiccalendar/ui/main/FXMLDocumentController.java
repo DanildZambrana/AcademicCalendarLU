@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,6 +49,8 @@ import javafx.print.PrinterJob;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
@@ -1470,8 +1473,66 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+    
+    
     @FXML
-    private void deleteAllEvents(MouseEvent event) {
+    private void deleteAllEvents(MouseEvent event){
+        
+        //Show confirmation dialog to make sure the user want to delete the selected rule
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText("All Events Deletion");
+        alert.setContentText("Are you sure you want to delete all events in this calendar?");
+        //Customize the buttons in the confirmation dialog
+        ButtonType buttonTypeYes = new ButtonType("Yes");
+        ButtonType buttonTypeNo = new ButtonType("No");
+        //Set buttons onto the confirmation dialog
+        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+        
+        //Get the user's answer on whether deleting or not
+        Optional<ButtonType> result = alert.showAndWait();
+        
+        //If the user wants to delete the calendar, call the function that deletes the calendar. Otherwise, close the window
+        if (result.get() == buttonTypeYes){
+            deleteAllEventsInCalendar();
+        } 
+        
+        
+    }
+    
+    // Function that deletes all the events in the current calendar
+    public void deleteAllEventsInCalendar() {
+        
+        //Variable that holds the name of the current calendar
+        String calName = Model.getInstance().calendar_name;
+        
+        //Query that will delete all events that belong to the selected calendar
+        String deleteAllEventsQuery = "DELETE FROM EVENTS "
+                                 + "WHERE EVENTS.CalendarName='" + calName + "'";
+        
+        //Execute query that deletes all events associated to the selected calendar
+        boolean eventsWereDeleted = databaseHandler.executeAction(deleteAllEventsQuery);
+        
+        //Check if events were successfully deleted and indicate the user if so
+        if (eventsWereDeleted)
+        {
+            //Update the calendar. Show that events were actually deleted
+            repaintView();
+            
+            //Show message indicating that the selected calendar was deleted
+            Alert alertMessage = new Alert(Alert.AlertType.INFORMATION);
+            alertMessage.setHeaderText(null);
+            alertMessage.setContentText("All events were successfully deleted");
+            alertMessage.showAndWait();
+        }
+        else
+        {
+            //Show message indicating that the calendar could not be deleted
+            Alert alertMessage = new Alert(Alert.AlertType.ERROR);
+            alertMessage.setHeaderText(null);
+            alertMessage.setContentText("Deleting Events Failed!");
+            alertMessage.showAndWait();
+        }
     }
     
     
