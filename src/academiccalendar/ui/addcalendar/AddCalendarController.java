@@ -134,13 +134,10 @@ public class AddCalendarController implements Initializable {
                 {
                     Alert alertMessage = new Alert(Alert.AlertType.ERROR);
                     alertMessage.setHeaderText(null);
-                    alertMessage.setContentText("Creating Calendar Failed!");
+                    alertMessage.setContentText("Creating Calendar Failed!\nPlease use a different name for the calendar");
                     alertMessage.showAndWait();
                 }
 
-                // Close the window
-                Stage stage = (Stage) rootPane.getScene().getWindow();
-                stage.close(); 
             }
             
         }

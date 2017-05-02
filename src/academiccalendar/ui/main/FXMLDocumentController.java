@@ -1392,6 +1392,7 @@ public class FXMLDocumentController implements Initializable {
         if (termsToFilter.isEmpty())
         {
             System.out.println("terms are not selected. No events have to appear on calendar. Just call loadCalendarLabels method in the RepaintView method");
+            selectAllCheckBox.setSelected(false);
             loadCalendarLabels();
         }
         else
@@ -1479,8 +1480,8 @@ public class FXMLDocumentController implements Initializable {
     private void deleteAllEvents(MouseEvent event){
         
         //Show confirmation dialog to make sure the user want to delete the selected rule
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation Dialog");
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning Dialog");
         alert.setHeaderText("All Events Deletion");
         alert.setContentText("Are you sure you want to delete all events in this calendar?");
         //Customize the buttons in the confirmation dialog

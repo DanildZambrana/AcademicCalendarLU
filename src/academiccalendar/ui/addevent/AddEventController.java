@@ -158,7 +158,7 @@ public class AddEventController implements Initializable {
         {
             Alert alertMessage = new Alert(Alert.AlertType.ERROR);
             alertMessage.setHeaderText(null);
-            alertMessage.setContentText("Adding Event Failed!");
+            alertMessage.setContentText("Adding Event Failed!\nThere is already an event with the same information");
             alertMessage.showAndWait();
         }
         

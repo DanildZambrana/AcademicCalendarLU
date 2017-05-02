@@ -305,7 +305,7 @@ public class EditEventController implements Initializable {
         {
             Alert alertMessage = new Alert(Alert.AlertType.ERROR);
             alertMessage.setHeaderText(null);
-            alertMessage.setContentText("Updating Event Failed!");
+            alertMessage.setContentText("Updating Event Failed!\nThere is already an event with the same information");
             alertMessage.showAndWait();
         }
         
