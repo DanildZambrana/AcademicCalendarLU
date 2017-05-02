@@ -324,7 +324,7 @@
                                           </HBox>
                                        </children>
                                     </VBox>
-                                    <JFXCheckBox fx:id="selectAll" alignment="CENTER" checkedColor="#777777" contentDisplay="CENTER" onAction="#selectAllCheckBoxes" prefHeight="31.0" prefWidth="320.0" text="Check/Uncheck all">
+                                    <JFXCheckBox fx:id="selectAllCheckBox" alignment="CENTER" checkedColor="#777777" contentDisplay="CENTER" onAction="#selectAllCheckBoxes" prefHeight="31.0" prefWidth="320.0" text="Select/Unselect all">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
