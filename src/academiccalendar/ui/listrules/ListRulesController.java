@@ -211,7 +211,7 @@ public class ListRulesController implements Initializable {
             {
                 Alert alertMessage = new Alert(Alert.AlertType.ERROR);
                 alertMessage.setHeaderText(null);
-                alertMessage.setContentText("Creating event based on a rule failed!");
+                alertMessage.setContentText("Creating event based on a rule failed!\nThere is an event already created based on this rule");
                 alertMessage.showAndWait();
             }
         }
@@ -258,11 +258,19 @@ public class ListRulesController implements Initializable {
                 alertMessage.setContentText(auxEventsCreated + " Events Were Successfully Created Based On All Rules!");
                 alertMessage.showAndWait();
             }
+            if (auxEventsCreated == 0)
+            {
+                //Show message letting the user know that no events were created because they already exist
+                Alert alertMessage = new Alert(Alert.AlertType.INFORMATION);
+                alertMessage.setHeaderText(null);
+                alertMessage.setContentText("No events were created based on the rules because they already exist!");
+                alertMessage.showAndWait();
+            }
         }
         else
         {
             //Show message letting the user know that events were created successfully based on all rules
-            Alert alertMessage = new Alert(Alert.AlertType.INFORMATION);
+            Alert alertMessage = new Alert(Alert.AlertType.ERROR);
             alertMessage.setHeaderText(null);
             alertMessage.setContentText("Action Failed! There aren't any saved rules!");
             alertMessage.showAndWait();
@@ -281,8 +289,8 @@ public class ListRulesController implements Initializable {
         
         if(!tableView.getSelectionModel().isEmpty()) {
             //Show confirmation dialog to make sure the user want to delete the selected rule
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation Dialog");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
             alert.setHeaderText("Rule Deletion");
             alert.setContentText("Are you sure you want to delete this rule?");
             //Customize the buttons in the confirmation dialog
