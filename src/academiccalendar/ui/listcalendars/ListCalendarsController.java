@@ -155,56 +155,73 @@ public class ListCalendarsController implements Initializable {
 
     @FXML
     private void openCalendar(MouseEvent event) {
-        // Get selected calendar from table
-        academiccalendar.ui.main.Calendar cal = tableView.getSelectionModel().getSelectedItem();
-        Model.getInstance().calendar_name = cal.getName();
-        Model.getInstance().calendar_start = Integer.parseInt(cal.getStartYear());
-        Model.getInstance().calendar_end = Integer.parseInt(cal.getEndYear());
-        Model.getInstance().calendar_start_date = cal.getStartDate();
         
-        // Load the calendar in the main window
-        mainController.calendarGenerate();
+        if (!tableView.getSelectionModel().isEmpty())
+        {
+            // Get selected calendar from table
+            academiccalendar.ui.main.Calendar cal = tableView.getSelectionModel().getSelectedItem();
+            Model.getInstance().calendar_name = cal.getName();
+            Model.getInstance().calendar_start = Integer.parseInt(cal.getStartYear());
+            Model.getInstance().calendar_end = Integer.parseInt(cal.getEndYear());
+            Model.getInstance().calendar_start_date = cal.getStartDate();
+
+            // Load the calendar in the main window
+            mainController.calendarGenerate();
+
+            //Enable the checkboxes for filtering events, now that the user is actually working on a calendar
+            mainController.enableCheckBoxes();
+
+            //Enable the buttons that work with rules
+            //mainController.enableButtons();
+
+            // Close the window after opening and loading the selected calendar
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+            stage.close();
+        }
+        else
+        {
+            //Show message indicating that the selected calendar was deleted
+            Alert alertMessage = new Alert(Alert.AlertType.INFORMATION);
+            alertMessage.setHeaderText(null);
+            alertMessage.setContentText("Please select a calendar!");
+            alertMessage.showAndWait();
+        }
         
-        //Enable the checkboxes for filtering events, now that the user is actually working on a calendar
-        mainController.enableCheckBoxes();
-        
-        //Enable the buttons that work with rules
-        //mainController.enableButtons();
-        
-        // Close the window after opening and loading the selected calendar
-        Stage stage = (Stage) rootPane.getScene().getWindow();
-        stage.close();
     }
 
     @FXML
     private void deleteCalendar(MouseEvent event) {
         
-        //Show confirmation dialog to make sure the user want to delete the selected rule
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation Dialog");
-        alert.setHeaderText("Calendar Deletion");
-        alert.setContentText("Are you sure you want to delete this calendar?");
-        //Customize the buttons in the confirmation dialog
-        ButtonType buttonTypeYes = new ButtonType("Yes");
-        ButtonType buttonTypeNo = new ButtonType("No");
-        //Set buttons onto the confirmation dialog
-        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-        
-        //Get the user's answer on whether deleting or not
-        Optional<ButtonType> result = alert.showAndWait();
-        
-        //If the user wants to delete the calendar, call the function that deletes the calendar. Otherwise, close the window
-        if (result.get() == buttonTypeYes){
-            deleteSelectedCalendar();
-        } 
-        else 
+        if (!tableView.getSelectionModel().isEmpty())
         {
-            // Close the window
-            Stage stage = (Stage) rootPane.getScene().getWindow();
-            stage.close(); 
+            //Show confirmation dialog to make sure the user want to delete the selected rule
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Dialog");
+            alert.setHeaderText("Calendar Deletion");
+            alert.setContentText("Are you sure you want to delete this calendar?");
+            //Customize the buttons in the confirmation dialog
+            ButtonType buttonTypeYes = new ButtonType("Yes");
+            ButtonType buttonTypeNo = new ButtonType("No");
+            //Set buttons onto the confirmation dialog
+            alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+
+            //Get the user's answer on whether deleting or not
+            Optional<ButtonType> result = alert.showAndWait();
+
+            //If the user wants to delete the calendar, call the function that deletes the calendar. Otherwise, close the window
+            if (result.get() == buttonTypeYes){
+                deleteSelectedCalendar();
+            }
         }
-        
-        
+        else
+        {
+            //Show message indicating that the selected calendar was deleted
+            Alert alertMessage = new Alert(Alert.AlertType.INFORMATION);
+            alertMessage.setHeaderText(null);
+            alertMessage.setContentText("Please select a calendar!");
+            alertMessage.showAndWait();
+        }
+          
     }
     
     
