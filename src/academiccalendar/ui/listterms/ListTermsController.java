@@ -193,6 +193,7 @@ public class ListTermsController implements Initializable {
         editTermEvent();
     }
     
+    /*
     @FXML
     private void deleteTerm(MouseEvent event) {
         
@@ -222,9 +223,9 @@ public class ListTermsController implements Initializable {
                 stage.close(); 
             }
         }
-    }
+    }*/
     
-    
+    /*
     public void deleteSelectedTerm(){
         
         // Get selected term data
@@ -302,6 +303,6 @@ public class ListTermsController implements Initializable {
             alertMessage.showAndWait();
             System.out.println("Deleting Events and Rules associated with Selected Term Failed!!!");
         }     
-    }
+    }*/
     
 }
