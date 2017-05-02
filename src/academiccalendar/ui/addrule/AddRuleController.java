@@ -175,9 +175,6 @@ public class AddRuleController implements Initializable {
         saveRuleInDatabase(eventDescription, term, days);
         //*********************************************************************
 
-        // Close the stage
-        Stage stage = (Stage) rootPane.getScene().getWindow();
-        stage.close();
     }
 
     @FXML
@@ -212,7 +209,7 @@ public class AddRuleController implements Initializable {
         {
             Alert alertMessage = new Alert(Alert.AlertType.ERROR);
             alertMessage.setHeaderText(null);
-            alertMessage.setContentText("Adding Rule Failed!");
+            alertMessage.setContentText("Adding Rule Failed!\nThere is already a rule with the same information");
             alertMessage.showAndWait();
         } 
     }
