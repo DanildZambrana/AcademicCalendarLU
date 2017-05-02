@@ -1472,6 +1472,10 @@ public class FXMLDocumentController implements Initializable {
             }
         }
     }
+
+    @FXML
+    private void deleteAllEvents(MouseEvent event) {
+    }
     
     
 } //End of FXMLDocumentController class
