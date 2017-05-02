@@ -6,7 +6,6 @@
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTabPane?>
-<?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -149,11 +148,6 @@
                                           <Insets left="20.0" right="20.0" top="20.0" />
                                        </VBox.margin>
                                     </JFXButton>
-                                    <JFXToggleButton fx:id="dateToggle" prefHeight="51.0" prefWidth="389.0" selected="true" text="Dates sorted? (ascending)">
-                                       <font>
-                                          <Font size="13.0" />
-                                       </font>
-                                    </JFXToggleButton>
                                  </children>
                               </VBox>
                            </children>

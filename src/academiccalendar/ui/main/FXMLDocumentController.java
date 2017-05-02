@@ -143,9 +143,6 @@ public class FXMLDocumentController implements Initializable {
     public static boolean workingOnCalendar = false;
     public static boolean checkBoxesHaveBeenClicked = false;
     
-    // For export date sorting
-    @FXML
-    private JFXToggleButton dateToggle;
     @FXML
     private AnchorPane rootPane;
     @FXML
