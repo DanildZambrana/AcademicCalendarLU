@@ -1191,9 +1191,7 @@ public class FXMLDocumentController implements Initializable {
     //******************************************************************************************
     //******************************************************************************************
     
-    //Function that handles the filtering of all events. Make them all show up or disappear from
-    //the calendar
-    
+    //Function filters all events. Make them all show up or disappear from the calendar
     @FXML
     private void selectAllCheckBoxes(ActionEvent e)
     {
