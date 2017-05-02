@@ -247,7 +247,7 @@ public class EditRuleController implements Initializable {
         {
             Alert alertMessage = new Alert(Alert.AlertType.ERROR);
             alertMessage.setHeaderText(null);
-            alertMessage.setContentText("Updating Rule Failed!");
+            alertMessage.setContentText("Updating Rule Failed!\nThere is already a rule with the same information");
             alertMessage.showAndWait();
         }
         
